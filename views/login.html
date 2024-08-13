@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawsWeb - Login</title>
+    <link rel="icon" type="image/png" href="images/pawsweb-icon.png">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <a href="/"><img src="/images/logo.png" alt="PawsWeb Logo" class="logo"></a>
+        <nav class="nav-buttons">
+            <a href="/"><button>HOME</button></a>
+            <a href="aboutus"><button>ABOUT US</button></a>
+            <a href="ourpets"><button>OUR PETS</button></a>
+            <a href="educational"><button>EDUCATIONAL</button></a>
+            <a href="faq"><button>FAQ</button></a>
+        </nav>
+        <a href="login"><button class="login-button">LOGIN</button></a>
+    </header>
+
+    <hr class="line">
+
+    <main>
+        <section class="login-container">
+            <h1 class="title">Log In</h1>
+            <hr class="line">
+            <br>
+            <form action="/login" method="POST">
+                <label for="email">Email</label>
+                <br>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <br><br><br>
+                <label for="password">Password</label>
+                <br>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <br><br><br>
+                <button type="submit" class="submit-button">Login</button>
+                <br><br><br>
+            </form>
+            <p>Don't have an account yet? Click the button below to register your account.</p>
+            <a href="register"><button class="flip-submit-button">Register</button></a>
+        </section>
+    </main>
+    <br><br><br><br><br><br>
+    <footer>
+        <p>&copy; 2024 PawsWeb. All rights reserved.</p>
+    </footer>
+</body>
+</html>
