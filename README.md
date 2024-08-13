@@ -1,2 +1,3 @@
-npm install
+Terminal >>
+npm install >>
 npm run dev
