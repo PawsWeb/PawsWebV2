@@ -1,24 +1,18 @@
 const express = require('express');
-const mysql = require('mysql2');
 const path = require('path');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// MySQL Database Connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'yourpassword',
-    database: 'pet_adoption'
-});
-
-db.connect(err => {
-    if (err) {
-        console.error('Error connecting to the database:', err);
-        return;
+// sqlite3 Database Connection
+const sqlite3 = require('sqlite3').verbose();
+global.db = new sqlite3.Database('./database/database.db',function(err){
+    if(err){
+        console.error(err);
+        process.exit(1); // bail out we can't connect to the DB
+    } else {
+        console.log("Database connected");
+        global.db.run("PRAGMA foreign_keys=ON"); // tell SQLite to pay attention to foreign key constraints
     }
-    console.log('Connected to MySQL database.');
 });
 
 // Middleware
