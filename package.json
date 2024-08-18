@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "build-db-win": "sqlite3 ./database/database.db < ./database/db_schema.sql",
     "server": "nodemon index.js",
     "client": "npm start --prefix views",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -18,7 +19,8 @@
     "mysql2": "^3.11.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
