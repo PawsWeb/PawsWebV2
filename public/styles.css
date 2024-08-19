@@ -1,16 +1,11 @@
-
 body {
     font-family: Arial, serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
-}
-
-
-h1 {
-    color: #333;
-    text-align: center;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
@@ -19,6 +14,11 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+main {
+    flex: 1;
+    padding: 20px;
 }
 
 footer {
@@ -37,6 +37,12 @@ hr.line {
     width: 100%;
 }
 
+h1 {
+    color: #333;
+    text-align: center;
+    padding: 20px;
+}
+
 label {
     color: #333;
     font-size: 18px;
@@ -49,7 +55,6 @@ input, textarea {
     padding: 5px;
     border-radius: 5px;
 }
-
 
 /** Classes **/
 
@@ -100,7 +105,6 @@ input, textarea {
     border-bottom: 2px solid #453a2fc7;
 }
 
-
 .login-container {
     text-align: center;
 }
@@ -144,4 +148,11 @@ input, textarea {
     color: #333;
     padding: 20px;
     margin: -10px 0;
+}
+
+.about-us {
+    text-align: center;
+    padding: 20px;
+    max-width: 800px; 
+    margin: 0 auto;
 }
