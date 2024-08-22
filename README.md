@@ -1,2 +1,2 @@
->> Open new terminals
+>> Open new terminal
       npm run dev
