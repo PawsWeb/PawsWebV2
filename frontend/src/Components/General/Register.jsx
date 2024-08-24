@@ -17,13 +17,13 @@ function Register() {
     height: "auto",
     padding: "2rem",
     margin: "100px auto",
-    borderRadius: "1rem",
+    borderRadius: "0.5rem",
     border: "1px solid #453a2f",
-    boxShadow: "10px 10px 10px #453a2f"
+    boxShadow: "10px 10px 10px #453a2f",
   };
   const heading = { fontSize: "2.5rem", fontWeight: "600" };
   const text = { marginTop: "2rem", fontSize: "1.0rem", fontWeight: "300" };
-  const row = { display: "flex", marginTop: "2rem" };
+  const row = { display: "flex", marginTop: "1.5rem" };
   const registerBtn = {
     marginTop: "2rem",
     fontSize: "1.2rem",
@@ -43,18 +43,25 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("adopters");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("adopter");
 
   const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
+      
+      if (password !== confirmPassword) {
+        window.alert("Passwords do not match");
+        return;
+      }
+
     axios
       .post("http://localhost:3001/register", { name, email, password, role })
       .then((result) => {
         if (result.status == 201) {
-          console.log("User created successfully");
-          navigate("/login");
+          console.log("User registered. OTP sent to email.");
+          navigate("/verify-otp", { state: { email } });
         }
       })
       .catch((err) => {
@@ -68,7 +75,7 @@ function Register() {
 
   return (
     <>
-      <Grid align="center">
+      <Grid align="center" sx={{ paddingTop: '120px'}}>
         <Paper
           style={paperStyle}
           sx={{
@@ -79,7 +86,7 @@ function Register() {
               lg: "30vw",
               xl: "20vw",
             },
-            height: "60vh",
+            height: "50vh",
           }}
         >
           <Typography style={heading}>Register</Typography>
@@ -108,6 +115,15 @@ function Register() {
               name="password"
               required
             ></TextField>
+            <TextField
+              style={row}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              required
+            />
+
             <FormControl style={row}>
 
               <Select
@@ -115,9 +131,9 @@ function Register() {
                 onChange={(e) => setRole(e.target.value)}
                 required
               >
-                <MenuItem value="adopters">Adopters</MenuItem>
-                <MenuItem value="staffs">Staffs</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="adopter">Adopter</MenuItem>
+                <MenuItem value="staff">Staff</MenuItem>
+
               </Select>
             </FormControl>
             <Button variant="contained" style={registerBtn} type="submit">
