@@ -27,7 +27,7 @@ function Login() {
     borderRadius: "0.5rem",
   };
   const registerBtn = {
-    marginTop: "1rem",
+    marginBottom: "2rem",
     fontSize: "1.2rem",
     fontWeight: "700",
     backgroundColor: "#f4e3d3",

@@ -32,7 +32,7 @@ function Register() {
     borderRadius: "0.5rem",
   };
   const loginBtn = {
-    marginTop: "1rem",
+    marginBottom: "2rem",
     fontSize: "1.2rem",
     fontWeight: "700",
     backgroundColor: "#f4e3d3",
@@ -75,7 +75,7 @@ function Register() {
 
   return (
     <>
-      <Grid align="center" sx={{ paddingTop: '120px'}}>
+      <Grid align="center" sx={{ paddingTop: '80px'}}>
         <Paper
           style={paperStyle}
           sx={{
