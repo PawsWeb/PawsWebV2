@@ -133,6 +133,7 @@ function Register() {
               >
                 <MenuItem value="adopter">Adopter</MenuItem>
                 <MenuItem value="staff">Staff</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
 
               </Select>
             </FormControl>

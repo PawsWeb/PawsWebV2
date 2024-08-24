@@ -163,7 +163,7 @@ app.get("/user", (req, res) => {
 });
 
 app.post('/contact', async (req, res) => {
-  const { name, email, message } = req.body;
+  const { name, email, message, subject } = req.body;
 
   try {
     // Construct the email content
@@ -171,10 +171,12 @@ app.post('/contact', async (req, res) => {
       from: email, 
       to: 'pawsweb.2024@gmail.com',
       replyTo: email, 
-      subject: `New Contact Form Submission from ${name}`,
+      subject: `Contact Form Submission: ${subject}`,
+
       text: `You have received a new message from the contact form on your website.\n\n` +
             `Name: ${name}\n` +
             `Email: ${email}\n\n` +
+            `Subject: ${subject}\n\n` +
             `Message:\n${message}`,
     };
 

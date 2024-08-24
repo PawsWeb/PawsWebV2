@@ -23,6 +23,7 @@ function Contact() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,12 +31,13 @@ function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    axios.post('http://localhost:3001/contact', { name, email, message })
+    axios.post('http://localhost:3001/contact', { name, email, subject, message })
       .then(response => {
         if (response.status === 200) {
           setSuccessMessage('Your message has been sent successfully!');
           setName('');
           setEmail('');
+          setSubject('');
           setMessage('');
         }
       })
@@ -65,8 +67,6 @@ function Contact() {
         <form onSubmit={handleSubmit}>
           <TextField
             style={row}
-            fullWidth
-            margin="normal"
             label="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -74,8 +74,6 @@ function Contact() {
           />
           <TextField
             style={row}
-            fullWidth
-            margin="normal"
             label="Email"
             type="email"
             value={email}
@@ -84,8 +82,13 @@ function Contact() {
           />
           <TextField
             style={row}
-            fullWidth
-            margin="normal"
+            label="Subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            required
+          />
+          <TextField
+            style={row}
             label="Message"
             multiline
             rows={4}
