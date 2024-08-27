@@ -43,7 +43,7 @@ function FaqEditor() {
   };
 
   const editDltBtn = {
-    color: "#574e44",
+    color: "#574e44"
   };
 
   const [blogs, setBlogs] = useState([]);
@@ -298,15 +298,12 @@ function FaqEditor() {
                   </Typography>
                 </div>
               ))}
-              <IconButton
-                onClick={() => handleEditBlog(blog)}
-                style={{ marginTop: "1rem" }}
-              >
+              <IconButton onClick={() => handleEditBlog(blog)}>
                 <EditIcon variant="contained" style={editDltBtn} />
               </IconButton>
               <IconButton
                 onClick={() => handleDeleteBlog(blog._id)}
-                style={{ marginTop: "1rem", marginLeft: "1rem" }}
+                style={{ marginLeft: "0.5rem" }}
               >
                 <DeleteIcon variant="contained" style={editDltBtn} />
               </IconButton>

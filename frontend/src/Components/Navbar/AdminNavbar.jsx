@@ -19,7 +19,6 @@ import ReorderIcon from "@mui/icons-material/Reorder";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 const navBtnStyle = {
-  backgroundColor: "transparent",
   color: "#000",
   marginRight: "10px",
   fontSize: "16px",
@@ -28,7 +27,6 @@ const navBtnStyle = {
 };
 
 const reorderBtnStyle = {
-  backgroundColor: "transparent",
   color: "#000",
   marginRight: "10px",
 };
@@ -150,6 +148,7 @@ function AdminNavbar({ userName }) {
                 <IconButton
                   style={reorderBtnStyle}
                   edge="start"
+                  variant="contained"
                   color="inherit"
                   aria-label="menu"
                   onClick={handleMenuOpen}

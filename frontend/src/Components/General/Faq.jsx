@@ -49,14 +49,6 @@ function Faq() {
       <Grid container alignItems="center" justifyContent="space-between">
         <Grid item>
           <Typography style={heading}>FAQ</Typography>
-          <Typography style={subtitle}>
-            Welcome to our FAQ section! Here, we've compiled a range of helpful
-            questions and answers to assist pet caregivers in finding quick
-            solutions and understanding essential topics about pet care. Whether
-            you're a seasoned pet parent or new to the world of pets, you'll
-            find practical tips and advice to ensure your furry, feathered, or
-            scaly friends are happy and healthy!
-          </Typography>
         </Grid>
         {userRole === "admin" && (
           <Grid item>
@@ -68,6 +60,14 @@ function Faq() {
           </Grid>
         )}
       </Grid>
+      <Typography style={subtitle}>
+        Welcome to our FAQ section! Here, we've compiled a range of helpful
+        questions and answers to assist pet caregivers in finding quick
+        solutions and understanding essential topics about pet care. Whether
+        you're a seasoned pet parent or new to the world of pets, you'll find
+        practical tips and advice to ensure your furry, feathered, or scaly
+        friends are happy and healthy!
+      </Typography>
       {faqs.length === 0 ? (
         <Typography variant="h6" align="center">
           No FAQs available.
