@@ -23,9 +23,8 @@ app.use(
   })
 );
 
-// Configure nodemailer
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Or use a different email service
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -67,19 +66,19 @@ app.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
-    const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999);
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserModel({
       name,
       email,
       password: hashedPassword,
       role,
-      otp, // Save OTP for verification
-      otpExpires: Date.now() + 5 * 60 * 1000, // OTP expires in 5 minutes
+      otp,
+      otpExpires: Date.now() + 5 * 60 * 1000,
     });
 
     await newUser.save();
-    // Send OTP email
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -107,7 +106,6 @@ app.post('/verify-otp', async (req, res) => {
       return res.status(400).json({ error: 'Invalid or expired OTP' });
     }
 
-    // OTP is valid; proceed with registration or account activation
     user.otp = undefined;
     user.otpExpires = undefined;
     await user.save();
@@ -151,7 +149,7 @@ app.post('/logout', (req, res) => {
       console.error('Logout error:', err);
       return res.status(500).send('Failed to log out');
     }
-    res.clearCookie('connect.sid'); // or any session-related cookie
+    res.clearCookie('connect.sid');
     res.status(200).send('Logged out');
   });
 });
@@ -164,7 +162,6 @@ app.get("/user", (req, res) => {
   }
 });
 
-// Get all FAQs
 app.get('/faqs', async (req, res) => {
   try {
     const faqs = await Faq.find();
@@ -174,7 +171,6 @@ app.get('/faqs', async (req, res) => {
   }
 });
 
-// Add new FAQ
 app.post('/faqs', async (req, res) => {
   const faq = new Faq(req.body);
   try {
@@ -185,7 +181,6 @@ app.post('/faqs', async (req, res) => {
   }
 });
 
-// Update FAQ
 app.put('/faqs/:id', async (req, res) => {
   try {
     const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -195,7 +190,6 @@ app.put('/faqs/:id', async (req, res) => {
   }
 });
 
-// Delete FAQ
 app.delete('/faqs/:id', async (req, res) => {
   try {
     await Faq.findByIdAndDelete(req.params.id);
@@ -209,7 +203,6 @@ app.post('/contact', async (req, res) => {
   const { name, email, message, subject } = req.body;
 
   try {
-    // Construct the email content
     const mailOptions = {
       from: email, 
       to: 'pawsweb.2024@gmail.com',
@@ -223,7 +216,6 @@ app.post('/contact', async (req, res) => {
             `Message:\n${message}`,
     };
 
-    // Send the email using the nodemailer transporter
     await transporter.sendMail(mailOptions);
 
     res.status(200).json({ message: 'Your message has been sent successfully!' });

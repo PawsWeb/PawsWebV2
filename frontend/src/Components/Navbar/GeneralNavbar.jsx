@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { AppBar, 
-  Toolbar, 
-  Button, 
-  Box, 
-  IconButton, 
-  Menu, 
-  MenuItem, 
-  useMediaQuery, 
-  useTheme, 
-  styled, 
-  alpha 
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  useMediaQuery,
+  useTheme,
+  styled,
+  alpha,
 } from "@mui/material";
 
 import logo from "../../assets/images/logo.png";
@@ -49,7 +50,10 @@ const StyledMenu = styled((props) => (
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
-    color: theme.palette.mode === "light" ? "rgb(55, 65, 81)" : theme.palette.grey[300],
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
@@ -62,7 +66,10 @@ const StyledMenu = styled((props) => (
         marginRight: theme.spacing(1.5),
       },
       "&:active": {
-        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
       },
     },
   },
@@ -81,14 +88,8 @@ function GeneralNavbar() {
     setAnchorEl(null);
   };
 
-  const renderMenuItems = () => (
-    [
-      "Home", 
-      "Pets", 
-      "Educational", 
-      "FAQ", 
-      "Contact"
-    ].map((text) => (
+  const renderMenuItems = () =>
+    ["Home", "Pets", "Educational", "FAQ", "Contact"].map((text) => (
       <MenuItem
         key={text}
         onClick={handleMenuClose}
@@ -98,18 +99,32 @@ function GeneralNavbar() {
       >
         {text}
       </MenuItem>
-    ))
-  );
+    ));
 
   return (
     <AppBar sx={{ bgcolor: "white", height: "100px" }}>
       <Toolbar>
-        <Box sx={{ position: "relative", width: "100%", display: "flex", alignItems: "center" }}>
-          <img src={logo} alt="PawsWeb Logo" style={{ marginTop: "5px", width: "150px" }} />
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={logo}
+            alt="PawsWeb Logo"
+            style={{ marginTop: "5px", width: "150px" }}
+          />
           {isSmallScreen ? (
             <>
               <IconButton
-                style={{ position: "absolute", left: "90%", transform: "translateX(-50%)" }}
+                style={{
+                  position: "absolute",
+                  left: "90%",
+                  transform: "translateX(-50%)",
+                }}
                 edge="start"
                 color="inherit"
                 aria-label="menu"
@@ -117,12 +132,18 @@ function GeneralNavbar() {
               >
                 <ReorderIcon style={reorderBtnStyle} />
               </IconButton>
-              <StyledMenu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+              <StyledMenu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
                 {renderMenuItems()}
               </StyledMenu>
             </>
           ) : (
-            <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
+            <Box
+              sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
+            >
               {["Home", "Pets", "Educational", "FAQ", "Contact"].map((text) => (
                 <Button
                   key={text}
@@ -136,7 +157,10 @@ function GeneralNavbar() {
               ))}
             </Box>
           )}
-          <Link to="/login" style={{ textDecoration: "none", marginLeft: "auto" }}>
+          <Link
+            to="/login"
+            style={{ textDecoration: "none", marginLeft: "auto" }}
+          >
             <IconButton aria-label="Login">
               <LoginIcon color="success" />
             </IconButton>
@@ -148,4 +172,3 @@ function GeneralNavbar() {
 }
 
 export default GeneralNavbar;
-

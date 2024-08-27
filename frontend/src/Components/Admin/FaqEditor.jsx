@@ -31,7 +31,7 @@ function FaqEditor() {
     fontWeight: "700",
     backgroundColor: "#453a2f",
     borderRadius: "0.5rem",
-    marginLeft: "1rem"
+    marginLeft: "1rem",
   };
 
   const addQsBtn = {
@@ -45,8 +45,6 @@ function FaqEditor() {
   const editDltBtn = {
     color: "#574e44",
   };
-
-
 
   const [blogs, setBlogs] = useState([]);
   const [newBlogTitle, setNewBlogTitle] = useState("");
@@ -70,16 +68,16 @@ function FaqEditor() {
       .then(() => {
         setNewBlogTitle("");
         setQuestions([{ question: "", answer: "" }]);
-        fetchBlogs(); // Refresh the list
+        fetchBlogs();
       })
       .catch((error) => console.error(error));
   };
 
   const handleDeleteBlog = (blogId) => {
-    if (window.confirm('Are you sure you want to delete this blog?')) {
+    if (window.confirm("Are you sure you want to delete this blog?")) {
       axios
         .delete(`http://localhost:3001/faqs/${blogId}`)
-        .then(() => fetchBlogs()) // Refresh the list
+        .then(() => fetchBlogs())
         .catch((error) => console.error(error));
     }
   };
@@ -94,7 +92,7 @@ function FaqEditor() {
       .put(`http://localhost:3001/faqs/${blogId}`, { questions: editQuestions })
       .then(() => {
         setEditingBlog(null);
-        fetchBlogs(); // Refresh the list
+        fetchBlogs();
       })
       .catch((error) => console.error(error));
   };
@@ -104,7 +102,7 @@ function FaqEditor() {
   };
 
   const handleRemoveQuestion = (index) => {
-    if (window.confirm('Are you sure you want to delete this question?')) {
+    if (window.confirm("Are you sure you want to delete this question?")) {
       const newQuestions = [...questions];
       newQuestions.splice(index, 1);
       setQuestions(newQuestions);
@@ -124,7 +122,7 @@ function FaqEditor() {
   };
 
   const handleRemoveEditQuestion = (index) => {
-    if (window.confirm('Are you sure you want to delete this question?')) {
+    if (window.confirm("Are you sure you want to delete this question?")) {
       const newQuestions = [...editQuestions];
       newQuestions.splice(index, 1);
       setEditQuestions(newQuestions);
@@ -143,16 +141,16 @@ function FaqEditor() {
       <Grid container alignItems="center" justifyContent="space-between">
         <Typography style={heading}>FAQ Dashboard</Typography>
         <Link to="/faq" style={{ textDecoration: "none" }}>
-                <Button variant="contained" style={buttonStyle}>
-                  View
-                </Button>
+          <Button variant="contained" style={buttonStyle}>
+            View
+          </Button>
         </Link>
       </Grid>
       <Divider style={{ margin: "2rem 0" }} />
       <Typography style={title}>ADD NEW BLOG</Typography>
       <TextField
         InputProps={{
-          style: { fontWeight: 'bold' }, // Make text bold
+          style: { fontWeight: "bold" },
         }}
         label="New Blog Title"
         value={newBlogTitle}
@@ -168,7 +166,7 @@ function FaqEditor() {
             onChange={(e) => handleQuestionChange(index, e)}
             style={row}
             InputProps={{
-              style: { fontWeight: 'bold' }, // Make text bold
+              style: { fontWeight: "bold" },
             }}
             fullWidth
           />
@@ -183,8 +181,8 @@ function FaqEditor() {
             rows={10}
             inputProps={{ style: { overflowWrap: "break-word" } }}
           />
-          <IconButton onClick={() => handleRemoveQuestion(index)} >
-            <DeleteIcon variant="contained" style={editDltBtn}/>
+          <IconButton onClick={() => handleRemoveQuestion(index)}>
+            <DeleteIcon variant="contained" style={editDltBtn} />
           </IconButton>
         </div>
       ))}
@@ -205,12 +203,24 @@ function FaqEditor() {
         Add Blog
       </Button>
       <Divider style={{ margin: "2rem 0" }} />
-      <Typography style={title}>
-        EXISTING BLOGS
-      </Typography>
+      <Typography style={title}>EXISTING BLOGS</Typography>
       {blogs.map((blog) => (
-        <Paper key={blog._id} style={{ padding: "1rem", marginBottom: "1rem", overflowWrap: "break-word" }}>
-          <Typography variant="h6" style={{ fontWeight: "bold", overflowWrap: "break-word", textTransform: "uppercase" }}>
+        <Paper
+          key={blog._id}
+          style={{
+            padding: "1rem",
+            marginBottom: "1rem",
+            overflowWrap: "break-word",
+          }}
+        >
+          <Typography
+            variant="h6"
+            style={{
+              fontWeight: "bold",
+              overflowWrap: "break-word",
+              textTransform: "uppercase",
+            }}
+          >
             {blog.blogTitle}
           </Typography>
           {editingBlog === blog._id ? (
@@ -223,7 +233,13 @@ function FaqEditor() {
                     value={q.question}
                     onChange={(e) => handleEditQuestionChange(index, e)}
                     style={row}
-                    InputProps={{ style: { fontWeight: "bold", overflowWrap: "break-word", fontWeight: "bold" } }}
+                    InputProps={{
+                      style: {
+                        fontWeight: "bold",
+                        overflowWrap: "break-word",
+                        fontWeight: "bold",
+                      },
+                    }}
                     fullWidth
                   />
                   <TextField
@@ -237,8 +253,8 @@ function FaqEditor() {
                     rows={10}
                     fullWidth
                   />
-                  <IconButton onClick={() => handleRemoveEditQuestion(index)} >
-                    <DeleteIcon  variant="contained" style={editDltBtn}/>
+                  <IconButton onClick={() => handleRemoveEditQuestion(index)}>
+                    <DeleteIcon variant="contained" style={editDltBtn} />
                   </IconButton>
                 </div>
               ))}
@@ -274,20 +290,28 @@ function FaqEditor() {
                   >
                     {q.question}
                   </Typography>
-                  <Typography variant="body1" style={{ overflowWrap: "break-word" }}>
+                  <Typography
+                    variant="body1"
+                    style={{ overflowWrap: "break-word" }}
+                  >
                     {q.answer}
                   </Typography>
                 </div>
               ))}
-              <IconButton onClick={() => handleEditBlog(blog)} style={{ marginTop: '1rem' }}>
-                <EditIcon variant="contained" style={editDltBtn}/>
+              <IconButton
+                onClick={() => handleEditBlog(blog)}
+                style={{ marginTop: "1rem" }}
+              >
+                <EditIcon variant="contained" style={editDltBtn} />
               </IconButton>
-              <IconButton onClick={() => handleDeleteBlog(blog._id)} style={{ marginTop: '1rem', marginLeft: '1rem' }}>
-                <DeleteIcon variant="contained" style={editDltBtn}/>
+              <IconButton
+                onClick={() => handleDeleteBlog(blog._id)}
+                style={{ marginTop: "1rem", marginLeft: "1rem" }}
+              >
+                <DeleteIcon variant="contained" style={editDltBtn} />
               </IconButton>
             </div>
           )}
-
         </Paper>
       ))}
     </Container>

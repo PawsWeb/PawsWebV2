@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { TextField, Button, Paper, Typography, Container } from '@mui/material';
-import axios from 'axios';
+import React, { useState } from "react";
+import { TextField, Button, Paper, Typography, Container } from "@mui/material";
+import axios from "axios";
 
 function Contact() {
   const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const paragraph = { color: "grey" ,fontSize: "0.9rem", fontWeight: "100", marginBottom: "40px" };
+  const subtitle = {
+    color: "grey",
+    fontSize: "0.9rem",
+    fontWeight: "100",
+    marginBottom: "40px",
+  };
   const row = { display: "flex", marginTop: "1.5rem" };
   const sendBtn = {
     margin: "2rem 0",
@@ -14,36 +19,42 @@ function Contact() {
     borderRadius: "0.5rem",
   };
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:3001/contact', { name, email, subject, message })
-      .then(response => {
+    axios
+      .post("http://localhost:3001/contact", { name, email, subject, message })
+      .then((response) => {
         if (response.status === 200) {
-          setSuccessMessage('Your message has been sent successfully!');
-          setName('');
-          setEmail('');
-          setSubject('');
-          setMessage('');
+          setSuccessMessage("Your message has been sent successfully!");
+          setName("");
+          setEmail("");
+          setSubject("");
+          setMessage("");
         }
       })
-      .catch(error => {
-        setErrorMessage('Failed to send your message. Please try again later.');
+      .catch((error) => {
+        setErrorMessage("Failed to send your message. Please try again later.");
         console.error(error);
       });
   };
 
   return (
-    <Container style={{ paddingTop: '5rem', width: '80%' }}>
+    <Container style={{ paddingTop: "5rem", width: "80%" }}>
       <Typography style={heading}>Contact Us</Typography>
-      <Typography style={paragraph}>Your questions and feedback are incredibly important to us. Whether you need assistance or just want to share your thoughts, we’re here and eager to listen. Reach out to us anytime, and we’ll make sure you get the answers you need!</Typography>
+      <Typography style={subtitle}>
+        Your questions and feedback are incredibly important to us. Whether you
+        need assistance or just want to share your thoughts, we’re here and
+        eager to listen. Reach out to us anytime, and we’ll make sure you get
+        the answers you need!
+      </Typography>
       <form onSubmit={handleSubmit}>
         <TextField
           style={row}
@@ -100,4 +111,3 @@ function Contact() {
 }
 
 export default Contact;
-

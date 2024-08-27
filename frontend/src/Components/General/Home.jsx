@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserRoleContext } from '../../App'; // Adjust import based on your context setup
-import { Button, Typography, Grid, Paper } from '@mui/material';
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserRoleContext } from "../../App";
+import { Button, Typography, Grid, Paper } from "@mui/material";
 
 function Home() {
-  const { userRole } = useContext(UserRoleContext); // Access user role from context
+  const { userRole } = useContext(UserRoleContext);
   const navigate = useNavigate();
 
   const paperStyle = {
@@ -25,7 +25,7 @@ function Home() {
   };
 
   const handleHomepageEditor = () => {
-    navigate('/admin/home');
+    navigate("/admin/home");
   };
 
   return (
@@ -44,8 +44,7 @@ function Home() {
         }}
       >
         <Typography variant="h4">Welcome to Home Page</Typography>
-        {/* Render Admin button only if the userRole is 'admin' */}
-        {userRole === 'admin' && (
+        {userRole === "admin" && (
           <Button
             variant="contained"
             style={buttonStyle}
@@ -54,7 +53,6 @@ function Home() {
             Admin Dashboard
           </Button>
         )}
-        
       </Paper>
     </Grid>
   );

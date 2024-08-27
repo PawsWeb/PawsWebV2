@@ -6,7 +6,7 @@ import {
   Typography,
   MenuItem,
   Select,
-  FormControl
+  FormControl,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -50,11 +50,11 @@ function Register() {
 
   const handleRegister = (e) => {
     e.preventDefault();
-      
-      if (password !== confirmPassword) {
-        window.alert("Passwords do not match");
-        return;
-      }
+
+    if (password !== confirmPassword) {
+      window.alert("Passwords do not match");
+      return;
+    }
 
     axios
       .post("http://localhost:3001/register", { name, email, password, role })
@@ -125,7 +125,6 @@ function Register() {
             />
 
             <FormControl style={row}>
-
               <Select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
@@ -134,15 +133,12 @@ function Register() {
                 <MenuItem value="adopter">Adopter</MenuItem>
                 <MenuItem value="staff">Staff</MenuItem>
                 <MenuItem value="admin">Admin</MenuItem>
-
               </Select>
             </FormControl>
             <Button variant="contained" style={registerBtn} type="submit">
               Register
             </Button>
-            <Typography style={text}>
-              Already have an account?
-            </Typography>
+            <Typography style={text}>Already have an account?</Typography>
             <Button
               variant="contained"
               style={loginBtn}
