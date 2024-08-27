@@ -5,7 +5,12 @@ const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const UserModel = require("./model/User");
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
+const UserModel = require("./models/User");
+const Homepage = require("./models/Homepage");
+const Faq = require("./models/Faq");
 
 dotenv.config();
 const app = express();
@@ -18,14 +23,19 @@ app.use(
   })
 );
 
+// Configure nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Or use a different email service
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB", err));
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
 
 app.use(
   session({
@@ -39,27 +49,73 @@ app.use(
   })
 );
 
-app.post("/register", async (req, res) => {
+app.get('/', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-    console.log(name + " " + email + " " + password + " " + role);
+    const content = await Homepage.findOne({ published: true });
+    res.json(content);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/register', async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  try {
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: "Email already exists" });
+      return res.status(400).json({ error: 'Email already exists' });
     }
+
+    const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit OTP
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserModel({
       name,
       email,
       password: hashedPassword,
-      role
+      role,
+      otp, // Save OTP for verification
+      otpExpires: Date.now() + 5 * 60 * 1000, // OTP expires in 5 minutes
     });
-    const savedUser = await newUser.save();
-    console.log("User saved successfully:", savedUser);
-    res.status(201).json(savedUser);
+
+    await newUser.save();
+    // Send OTP email
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Your OTP Code',
+      text: `Your OTP code is ${otp}`,
+    });
+
+    res.status(201).json({ message: 'User registered successfully. Check your email for OTP.' });
   } catch (error) {
-    console.error("Registration error:", error);
-    res.status(500).json({ error: error.message });
+    console.error('Registration error:', error);
+    res.status(500).json({ error: 'Failed to register user' });
+  }
+});
+
+app.post('/verify-otp', async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    if (user.otp !== otp || Date.now() > user.otpExpires) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' });
+    }
+
+    // OTP is valid; proceed with registration or account activation
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ message: 'OTP verified successfully' });
+  } catch (error) {
+    console.error('OTP verification error:', error);
+    res.status(500).json({ error: 'Failed to verify OTP' });
   }
 });
 
@@ -77,7 +133,6 @@ app.post("/login", async (req, res) => {
           role: user.role,
         };
         res.json("Success");
-        console.log(email);
       } else {
         res.status(401).json("Password does not match!");
       }
@@ -85,22 +140,20 @@ app.post("/login", async (req, res) => {
       res.status(401).json("No Records Found!");
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Failed to login' });
   }
 });
 
-app.get("/logout", async (req, res) => {
-  if (req.session) {
-    req.session.destroy((err) => {
-      if (err) {
-        res.status(500).json({ error: "Failed to logout" });
-      } else {
-        res.status(200).json("Logout successful");
-      }
-    });
-  } else {
-    res.status(400).json({ error: "No session found" });
-  }
+app.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Logout error:', err);
+      return res.status(500).send('Failed to log out');
+    }
+    res.clearCookie('connect.sid'); // or any session-related cookie
+    res.status(200).send('Logged out');
+  });
 });
 
 app.get("/user", (req, res) => {
@@ -111,3 +164,75 @@ app.get("/user", (req, res) => {
   }
 });
 
+// Get all FAQs
+app.get('/faqs', async (req, res) => {
+  try {
+    const faqs = await Faq.find();
+    res.json(faqs);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Add new FAQ
+app.post('/faqs', async (req, res) => {
+  const faq = new Faq(req.body);
+  try {
+    await faq.save();
+    res.status(201).json(faq);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Update FAQ
+app.put('/faqs/:id', async (req, res) => {
+  try {
+    const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(faq);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Delete FAQ
+app.delete('/faqs/:id', async (req, res) => {
+  try {
+    await Faq.findByIdAndDelete(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.post('/contact', async (req, res) => {
+  const { name, email, message, subject } = req.body;
+
+  try {
+    // Construct the email content
+    const mailOptions = {
+      from: email, 
+      to: 'pawsweb.2024@gmail.com',
+      replyTo: email, 
+      subject: `Contact Form Submission: ${subject}`,
+
+      text: `You have received a new message from the contact form on your website.\n\n` +
+            `Name: ${name}\n` +
+            `Email: ${email}\n\n` +
+            `Subject: ${subject}\n\n` +
+            `Message:\n${message}`,
+    };
+
+    // Send the email using the nodemailer transporter
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Your message has been sent successfully!' });
+  } catch (error) {
+    console.error('Contact form error:', error);
+    res.status(500).json({ error: 'Failed to send your message. Please try again later.' });
+  }
+});
+
+app.listen(process.env.PORT || 3001, () => {
+  console.log(`Server is running on port ${process.env.PORT || 3001}`);
+});
