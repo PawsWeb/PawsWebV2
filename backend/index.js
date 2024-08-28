@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const UserModel = require("./models/User");
+const PetsModel = require("./models/Pets");
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const Homepage = require("./models/Homepage");
@@ -192,4 +193,27 @@ app.post('/contact', async (req, res) => {
 
 app.listen(process.env.PORT || 3001, () => {
   console.log(`Server is running on port ${process.env.PORT || 3001}`);
+});
+
+app.post("/add-pet", async (req, res) => {
+  try {
+      const { name, breed, size, age, gender, shelter, description } = req.body;
+
+      const newPet = new PetsModel({
+          name: name,
+          breed: breed,
+          size: size,
+          age: age,
+          gender: gender,
+          shelter: shelter,
+          description: description
+      });
+
+      await newPet.save();
+
+      res.status(201).json({ message: "Pet listing added successfully!" });
+  } catch (err) {
+      console.error("Error adding pet listing:", err);
+      res.status(500).json({ message: "Failed to add pet listing" });
+  }
 });
