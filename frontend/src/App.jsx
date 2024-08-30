@@ -22,6 +22,10 @@ import Faq from './Components/General/Faq';
 import FaqEditor from './Components/Admin/FaqEditor';
 import Contact from './Components/General/Contact';
 
+import AdminListingPage from './Components/Admin/ListingPage';
+import AdminCreateListingPage from './Components/Admin/CreateListingPage';
+import StaffListingPage from './Components/Staff/ListingPage';
+import StaffCreateListingPage from './Components/Staff/CreateListingPage';
 
 export const IsLoggedInContext = createContext();
 export const SetIsLoggedInContext = createContext();
@@ -88,6 +92,10 @@ function App() {
               <Route path="/faq" element={<Faq />} />
               <Route path="/admin/faq" element={<FaqEditor />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/admin/listing-page" element={<AdminListingPage />} />
+              <Route path="/admin/create-listing" element={<AdminCreateListingPage />} />
+              <Route path="/staff/listing-page" element={<StaffListingPage />} />
+              <Route path="/staff/create-listing" element={<StaffCreateListingPage />} />
             </Routes>
           </Router>
         </UserRoleContext.Provider>
