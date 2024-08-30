@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate, Link } from "react-router-dom";
 
 const CreateListingPage = () => {
     const [formData, setFormData] = useState({
         name: '',
         breed: '',
-        size: '',
+        size: 'small',
         age: '',
-        gender: '',
+        gender: 'male',
         shelter: '',
         description: ''
     });
@@ -15,10 +17,28 @@ const CreateListingPage = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Here you would send the formData to your server/database
-        console.log('Form submitted:', formData);
+
+        const { name, breed, size, age, gender, shelter, description } = formData;
+        
+        console.log("gender is" ,name, breed, size, age, gender, shelter, description);
+        axios
+            .post("http://localhost:3001/admin/create-listing", { name, breed, size, age, gender, shelter, description })
+            .then((result) => {
+            if (result.status == 201) {
+                console.log('Form submitted:', formData);
+                navigate("/staff/listing-page");
+            }
+            })
+            .catch((err) => {
+            if (err.response && err.response.status === 400) {
+                window.alert("Please check input fields again");
+            } else {
+                console.log(err);
+            }
+            });
     };
 
     return (
@@ -37,7 +57,11 @@ const CreateListingPage = () => {
                 <br />
                 <label>
                     Size:
-                    <input type="text" name="size" value={formData.size} onChange={handleChange} required />
+                    <select name="size" value={formData.size} onChange={handleChange} required>
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                    </select>
                 </label>
                 <br />
                 <label>
@@ -48,8 +72,8 @@ const CreateListingPage = () => {
                 <label>
                     Gender:
                     <select name="gender" value={formData.gender} onChange={handleChange} required>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
                     </select>
                 </label>
                 <br />

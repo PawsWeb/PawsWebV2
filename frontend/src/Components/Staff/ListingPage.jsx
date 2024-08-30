@@ -1,32 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PetCard from '/src/PetCard.jsx';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const ListingPage = () => {
-    const [pets, setPets] = useState([]);
+  const [pets, setPets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        // Sample data, replace with API call to fetch pets from MongoDB
-        const samplePets = [
-            { name: 'Buddy', breed: 'Golden Retriever', size: 'Large', age: 3, gender: 'Male', shelter: 'Happy Tails Shelter', description: 'Friendly and playful dog.' },
-            { name: 'Mittens', breed: 'Siamese', size: 'Small', age: 2, gender: 'Female', shelter: 'Cat Haven', description: 'Loves cuddles and naps.' }
-        ];
-        setPets(samplePets);
-    }, []);
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/getPets'); // Make an API call
+        setPets(response.data); // Set the retrieved pets to state
+      } catch (err) {
+        setError('Failed to fetch pets');
+        console.error('Error fetching pets:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return (
-        <div>
-            <h1>Pet Listings</h1>
-            <div className="pet-listings">
-                {pets.map((pet, index) => (
-                    <PetCard key={index} pet={pet} />
-                ))}
-            </div>
-            <Link to="/staff/create-listing">
-                <button>Create New Listing</button>
-            </Link>
-        </div>
-    );
+    fetchPets();
+  }, []); // Empty dependency array means this runs once when the component mounts
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Display error if fetching fails
+  }
+
+  return (
+    <div>
+      <h1>Pet Listings</h1>
+      <div className="pet-listings">
+        {pets.length > 0 ? (
+          pets.map((pet, index) => (
+            <PetCard key={index} pet={pet} />
+          ))
+        ) : (
+          <p>No pets found</p> // Message if no pets are available
+        )}
+      </div>
+      <Link to="/admin/create-listing">
+        <button>Create New Listing</button>
+      </Link>
+    </div>
+  );
 };
 
 export default ListingPage;

@@ -11,7 +11,7 @@ const ListingPage = () => {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/admin/getPets'); // Make an API call
+        const response = await axios.get('http://localhost:3001/getPets'); // Make an API call
         setPets(response.data); // Set the retrieved pets to state
       } catch (err) {
         setError('Failed to fetch pets');

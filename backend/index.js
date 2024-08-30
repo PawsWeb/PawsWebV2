@@ -217,7 +217,7 @@ app.post("/admin/create-listing", async (req, res) => {
   }
 });
 
-app.get('/admin/getPets', async (req, res) => {
+app.get('/getPets', async (req, res) => {
   try {
     const pets = await PetsModel.find(); // Fetch all pets from MongoDB
     res.status(200).json(pets); // Return the pets as JSON
