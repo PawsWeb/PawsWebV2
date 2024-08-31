@@ -22,11 +22,11 @@ function FaqEditor() {
   const buttonStyle = {
     fontSize: "1rem",
     fontWeight: "700",
-    backgroundColor: "#453a2f",
+    backgroundColor: "#b99976",
     borderRadius: "0.5rem",
   };
 
-  const addBlogBtn = {
+  const publishBlogBtn = {
     fontSize: "1rem",
     fontWeight: "700",
     backgroundColor: "#453a2f",
@@ -37,8 +37,7 @@ function FaqEditor() {
   const addQsBtn = {
     fontSize: "1rem",
     fontWeight: "700",
-    backgroundColor: "#f4e3d3",
-    color: "#453a2f",
+    backgroundColor: "#987554",
     borderRadius: "0.5rem",
   };
 
@@ -59,7 +58,7 @@ function FaqEditor() {
       .catch((error) => console.error(error));
   }, []);
 
-  const handleAddBlog = () => {
+  const handlePublishBlog = () => {
     axios
       .post("http://localhost:3001/faqs", {
         blogTitle: newBlogTitle,
@@ -76,7 +75,7 @@ function FaqEditor() {
   const handleDeleteBlog = (blogId) => {
     if (window.confirm("Are you sure you want to delete this blog?")) {
       axios
-        .delete(`http://localhost:3001/faqs/${blogId}`)
+        .delete(`http://localhost:3001/faq/${blogId}`)
         .then(() => fetchBlogs())
         .catch((error) => console.error(error));
     }
@@ -89,7 +88,7 @@ function FaqEditor() {
 
   const handleSaveEdit = (blogId) => {
     axios
-      .put(`http://localhost:3001/faqs/${blogId}`, { questions: editQuestions })
+      .put(`http://localhost:3001/faq/${blogId}`, { questions: editQuestions })
       .then(() => {
         setEditingBlog(null);
         fetchBlogs();
@@ -195,14 +194,14 @@ function FaqEditor() {
         Question
       </Button>
       <Button
-        onClick={handleAddBlog}
+        onClick={handlePublishBlog}
         variant="contained"
         color="primary"
-        style={addBlogBtn}
+        style={publishBlogBtn}
       >
-        Add Blog
+        Publish
       </Button>
-      <Divider style={{ margin: "2rem 0" }} />
+      <Divider style={{ margin: "3rem 0" }} />
       <Typography style={title}>EXISTING BLOGS</Typography>
       {blogs.map((blog) => (
         <Paper
@@ -237,7 +236,6 @@ function FaqEditor() {
                       style: {
                         fontWeight: "bold",
                         overflowWrap: "break-word",
-                        fontWeight: "bold",
                       },
                     }}
                     fullWidth
@@ -275,7 +273,7 @@ function FaqEditor() {
                 variant="contained"
                 color="primary"
                 onClick={() => handleSaveEdit(blog._id)}
-                style={addBlogBtn}
+                style={publishBlogBtn}
               >
                 Save
               </Button>

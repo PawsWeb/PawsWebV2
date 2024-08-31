@@ -33,6 +33,10 @@ const reorderBtnStyle = {
   marginRight: "10px",
 };
 
+const logoutBtn = {
+  color: "#987554",
+};
+
 const nameStyle = {
   color: "#000",
   fontSize: "14px",
@@ -168,7 +172,7 @@ function AdopterNavbar({ userName }) {
             )}
             <Typography style={nameStyle}>{userName}</Typography>
             <Link to="/logout" style={{ textDecoration: "none" }}>
-              <IconButton aria-label="Logout" color="error">
+              <IconButton aria-label="Logout" style={logoutBtn}>
                 <LogoutIcon />
               </IconButton>
             </Link>

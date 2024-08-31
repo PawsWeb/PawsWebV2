@@ -32,6 +32,10 @@ const reorderBtnStyle = {
   color: "#000",
 };
 
+const loginBtn = {
+  color: "#987554",
+};
+
 const StyledMenu = styled((props) => (
   <Menu
     elevation={0}
@@ -162,7 +166,7 @@ function GeneralNavbar() {
             style={{ textDecoration: "none", marginLeft: "auto" }}
           >
             <IconButton aria-label="Login">
-              <LoginIcon color="success" />
+              <LoginIcon style={loginBtn}/>
             </IconButton>
           </Link>
         </Box>

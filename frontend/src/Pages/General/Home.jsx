@@ -20,7 +20,7 @@ function Home() {
     marginTop: "2rem",
     fontSize: "1.2rem",
     fontWeight: "700",
-    backgroundColor: "#453a2f",
+    backgroundColor: "#b99976",
     borderRadius: "0.5rem",
   };
 

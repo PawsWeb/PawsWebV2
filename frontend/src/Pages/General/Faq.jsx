@@ -18,7 +18,7 @@ function Faq() {
   const buttonStyle = {
     fontSize: "1rem",
     fontWeight: "700",
-    backgroundColor: "#453a2f",
+    backgroundColor: "#b99976",
     borderRadius: "0.5rem",
   };
 
@@ -77,10 +77,16 @@ function Faq() {
           <div key={faq._id} style={faqContainerStyle}>
             <Typography
               variant="h5"
+              align= "center"
+              backgroundColor= "#43392f"
+              padding= "15px 0"
+              color={"white"}
               style={{
                 fontWeight: "600",
+                
                 textTransform: "uppercase",
                 overflowWrap: "break-word",
+                
               }}
             >
               {faq.blogTitle}

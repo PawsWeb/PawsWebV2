@@ -11,6 +11,7 @@ const crypto = require('crypto');
 const UserModel = require("./models/User");
 const Homepage = require("./models/Homepage");
 const Faq = require("./models/Faq");
+const Educational = require("./models/Educational");
 
 dotenv.config();
 const app = express();
@@ -162,6 +163,46 @@ app.get("/user", (req, res) => {
   }
 });
 
+app.get('/educationals', async (req, res) => {
+  try {
+    const educationals = await Educational.find();
+    res.json(educationals);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/educationals', async (req, res) => {
+  const educational = new Educational(req.body);
+  try {
+    await educational.save();
+    res.status(201).json(educational);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.put('/educational/:id', async (req, res) => {
+  try {
+    const educational = await Educational.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(educational);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.delete('/educational/:id', async (req, res) => {
+  try {
+    await Educational.findByIdAndDelete(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+
+
+// FAQ
 app.get('/faqs', async (req, res) => {
   try {
     const faqs = await Faq.find();
@@ -181,7 +222,7 @@ app.post('/faqs', async (req, res) => {
   }
 });
 
-app.put('/faqs/:id', async (req, res) => {
+app.put('/faq/:id', async (req, res) => {
   try {
     const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(faq);
@@ -190,7 +231,7 @@ app.put('/faqs/:id', async (req, res) => {
   }
 });
 
-app.delete('/faqs/:id', async (req, res) => {
+app.delete('/faq/:id', async (req, res) => {
   try {
     await Faq.findByIdAndDelete(req.params.id);
     res.status(204).end();
@@ -209,7 +250,7 @@ app.post('/contact', async (req, res) => {
       replyTo: email, 
       subject: `Contact Form Submission: ${subject}`,
 
-      text: `You have received a new message from the contact form on your website.\n\n` +
+      text: `You have received a new message from the contact form on your website.\n\n `+
             `Name: ${name}\n` +
             `Email: ${email}\n\n` +
             `Subject: ${subject}\n\n` +
