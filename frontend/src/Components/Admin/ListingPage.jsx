@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import PetCard from '/src/PetCard.jsx';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios';
 
 const ListingPage = () => {
   const [pets, setPets] = useState([]);
@@ -11,8 +10,8 @@ const ListingPage = () => {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/getPets'); // Make an API call
-        setPets(response.data); // Set the retrieved pets to state
+        const response = await axios.get('http://localhost:3001/getPets');
+        setPets(response.data);
       } catch (err) {
         setError('Failed to fetch pets');
         console.error('Error fetching pets:', err);
@@ -22,30 +21,95 @@ const ListingPage = () => {
     };
 
     fetchPets();
-  }, []); // Empty dependency array means this runs once when the component mounts
+  }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading indicator
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Display error if fetching fails
+    return <div>{error}</div>;
   }
 
   return (
-    <div>
+    <div className="listing-page">
+      <style>
+        {`
+          .listing-page {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 33vh;
+          }
+
+          .pet-listings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+          }
+
+          .pet-card {
+             background-color: #ffffff;
+             border-radius: 8px;
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+             padding: 20px;
+             transition: transform 0.2s;
+             flex: 1 1 calc(33% - 20px); 
+             box-sizing: border-box;
+          }
+
+          .pet-card:hover {
+            transform: translateY(-5px);
+          }
+
+          .pet-card h2 {
+            margin-top: 0;
+            color: #333333;
+          }
+
+          .pet-card p {
+            margin: 5px 0;
+            color: #666666;
+          }
+
+          .create-listing-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+          }
+
+          .create-listing-button:hover {
+            background-color: #0056b3;
+          }
+        `}
+      </style>
       <h1>Pet Listings</h1>
       <div className="pet-listings">
         {pets.length > 0 ? (
           pets.map((pet, index) => (
-            <PetCard key={index} pet={pet} />
+            <div key={index} className="pet-card">
+              <h2>{pet.name}</h2>
+              <p><strong>Breed:</strong> {pet.breed}</p>
+              <p><strong>Size:</strong> {pet.size}</p>
+              <p><strong>Age:</strong> {pet.age}</p>
+              <p><strong>Gender:</strong> {pet.gender}</p>
+              <p><strong>Shelter:</strong> {pet.shelter}</p>
+              <p><strong>Description:</strong> {pet.description}</p>
+            </div>
           ))
         ) : (
-          <p>No pets found</p> // Message if no pets are available
+          <p>No pets found</p>
         )}
       </div>
       <Link to="/admin/create-listing">
-        <button>Create New Listing</button>
+        <button className="create-listing-button">Create New Listing</button>
       </Link>
     </div>
   );

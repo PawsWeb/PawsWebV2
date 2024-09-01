@@ -26,7 +26,7 @@ function GeneralNavbar() {
               Home
             </Button>
 
-            <Button variant="text" style={button} component={Link} to="/pets">
+            <Button variant="text" style={button} component={Link} to="/staff/listing-page">
               Pets
             </Button>
 

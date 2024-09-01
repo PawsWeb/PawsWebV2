@@ -33,7 +33,7 @@ function AdminNavbar({userName}) {
               Home
             </Button>
 
-            <Button variant="text" style={button} component={Link} to="/pets">
+            <Button variant="text" style={button} component={Link} to="/admin/listing-page">
               Pets
             </Button>
 
