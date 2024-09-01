@@ -33,7 +33,7 @@ function AdopterNavbar({userName}) {
               Home
             </Button>
 
-            <Button variant="text" style={button} component={Link} to="/pets">
+            <Button variant="text" style={button} component={Link} to="/adopter/create-listing">
               Pets
             </Button>
 

@@ -76,8 +76,8 @@ const ListingPage = () => {
             display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
+            background-color: #f4e3d3;
+            color: #453a2f;
             border: none;
             border-radius: 5px;
             cursor: pointer;

@@ -226,3 +226,36 @@ app.get('/getPets', async (req, res) => {
     res.status(500).json({ message: "Failed to retrieve pets" });
   }
 });
+
+app.get('/getPet/:id', async (req, res) => {
+  try {
+    const pet = await PetsModel.findById(req.params.id); // Use PetsModel here
+    if (!pet) return res.status(404).json({ message: 'Pet not found' });
+    res.json(pet);
+  } catch (err) {
+    console.error('Error fetching pet:', err);
+    res.status(500).json({ message: 'Error fetching pet' });
+  }
+});
+
+app.put('/admin/edit-listing/:id', async (req, res) => {
+  try {
+    const updatedPet = await PetsModel.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Use PetsModel here
+    if (!updatedPet) return res.status(404).json({ message: 'Pet not found' });
+    res.json(updatedPet);
+  } catch (err) {
+    console.error('Error updating pet:', err);
+    res.status(500).json({ message: 'Error updating pet' });
+  }
+});
+
+app.delete('/admin/delete-listing/:id', async (req, res) => {
+  try {
+    const pet = await PetsModel.findByIdAndDelete(req.params.id);
+    if (!pet) return res.status(404).json({ message: 'Pet not found' });
+    res.status(200).json({ message: 'Pet deleted successfully' });
+  } catch (err) {
+    console.error("Error deleting pet listing:", err);
+    res.status(500).json({ message: 'Failed to delete pet listing' });
+  }
+});

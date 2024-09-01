@@ -23,20 +23,6 @@ const ListingPage = () => {
     fetchPets();
   }, []);
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this listing?');
-    if (confirmDelete) {
-      try {
-        await axios.delete(`http://localhost:3001/admin/delete-listing/${id}`);
-        setPets(pets.filter(pet => pet._id !== id)); // Remove the deleted pet from the list
-        alert('Pet listing deleted successfully');
-      } catch (err) {
-        console.error('Error deleting pet listing:', err);
-        alert('Failed to delete pet listing');
-      }
-    }
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -52,7 +38,7 @@ const ListingPage = () => {
           .listing-page {
             padding: 20px;
             max-width: 1200px;
-            margin: 33vh auto 0;
+            margin: 33vh;
           }
 
           .pet-listings {
@@ -63,14 +49,13 @@ const ListingPage = () => {
           }
 
           .pet-card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            transition: transform 0.2s;
-            flex: 1 1 calc(33% - 20px); 
-            box-sizing: border-box;
-            position: relative;
+             background-color: #ffffff;
+             border-radius: 8px;
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+             padding: 20px;
+             transition: transform 0.2s;
+             flex: 1 1 calc(33% - 20px); 
+             box-sizing: border-box;
           }
 
           .pet-card:hover {
@@ -85,37 +70,6 @@ const ListingPage = () => {
           .pet-card p {
             margin: 5px 0;
             color: #666666;
-          }
-
-          .pet-card .edit-button, .pet-card .delete-button {
-            margin-top: 10px;
-            padding: 8px 15px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            position: absolute;
-            bottom: 20px;
-          }
-
-          .pet-card .edit-button {
-            background-color: #28a745;
-            right: 120px;
-          }
-
-          .pet-card .edit-button:hover {
-            background-color: #218838;
-          }
-
-          .pet-card .delete-button {
-            background-color: #dc3545;
-            right: 20px;
-          }
-
-          .pet-card .delete-button:hover {
-            background-color: #c82333;
           }
 
           .create-listing-button {
@@ -148,17 +102,12 @@ const ListingPage = () => {
               <p><strong>Gender:</strong> {pet.gender}</p>
               <p><strong>Shelter:</strong> {pet.shelter}</p>
               <p><strong>Description:</strong> {pet.description}</p>
-              <Link to={`/admin/edit-listing/${pet._id}`} className="edit-button">Edit</Link>
-              <button onClick={() => handleDelete(pet._id)} className="delete-button">Delete</button>
             </div>
           ))
         ) : (
           <p>No pets found</p>
         )}
       </div>
-      <Link to="/admin/create-listing">
-        <button className="create-listing-button">Create New Listing</button>
-      </Link>
     </div>
   );
 };
