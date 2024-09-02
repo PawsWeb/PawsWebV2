@@ -37,6 +37,7 @@ function Faq() {
     overflowWrap: "break-word",
   };
 
+
   useEffect(() => {
     axios
       .get("http://localhost:3001/faqs")
@@ -77,20 +78,18 @@ function Faq() {
           <div key={faq._id} style={faqContainerStyle}>
             <Typography
               variant="h5"
-              align= "center"
-              backgroundColor= "#43392f"
-              padding= "15px 0"
-              color={"white"}
+              align= "left"
+              marginBottom= "15px"
+              padding= "10px 0"
+              color={"black"}
               style={{
                 fontWeight: "600",
-                
                 textTransform: "uppercase",
                 overflowWrap: "break-word",
-                
               }}
             >
               {faq.blogTitle}
-            </Typography>
+            </Typography >
             {faq.questions.map((q, index) => (
               <div key={index}>
                 <Typography variant="h6" style={questionStyle}>

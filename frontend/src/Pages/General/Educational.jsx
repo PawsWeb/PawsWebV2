@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
   Container,
@@ -8,11 +8,18 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { UserRoleContext } from "../../App";
 
 function Educational() {
   const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const title = { fontSize: "2rem", fontWeight: "600", marginBottom: "1rem" };
+  const subtitle = {
+    color: "grey",
+    fontSize: "0.9rem",
+    fontWeight: "100",
+    marginBottom: "40px",
+  };
+  const title = { fontSize: "1.5rem", fontWeight: "600", marginBottom: "1rem" };
   const description = { fontSize: "1.2rem", marginBottom: "1rem" };
   const buttonStyle = {
     fontSize: "1rem",
@@ -20,10 +27,9 @@ function Educational() {
     backgroundColor: "#b99976",
     borderRadius: "0.5rem",
   };
-
-  const navigate = useNavigate();
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const { userRole } = useContext(UserRoleContext);
 
   useEffect(() => {
     fetchTopics();
@@ -62,7 +68,12 @@ function Educational() {
               <img
                 src={selectedTopic.image}
                 alt={selectedTopic.topicTitle}
-                style={{ width: "100%", maxHeight: "400px", objectFit: "contain", marginTop: "1rem" }}
+                style={{
+                  width: "100%",
+                  maxHeight: "400px",
+                  objectFit: "contain",
+                  marginTop: "1rem",
+                }}
               />
             )}
             <Divider style={{ margin: "2rem 0" }} />
@@ -76,11 +87,40 @@ function Educational() {
         </div>
       ) : (
         <div>
-          <Typography style={heading}>Educational Topics</Typography>
-          <Divider style={{ margin: "2rem 0" }} />
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item>
+              <Typography style={heading}>Educational</Typography>
+            </Grid>
+            {userRole === "admin" && (
+              <Grid item>
+                <Link
+                  to="/admin/educational"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button variant="contained" style={buttonStyle}>
+                    Educational Dashboard
+                  </Button>
+                </Link>
+              </Grid>
+            )}
+          </Grid>
+          <Typography style={subtitle}>
+            Explore our Educational page to find essential tips and resources
+            for pet care, behavior, and adoption. Whether you're preparing to
+            welcome a new pet or looking to enhance your knowledge, you'll
+            discover everything you need to ensure a happy and healthy life for
+            your furry friend.
+          </Typography>
           <Grid container spacing={4}>
             {topics.map((topic) => (
-              <Grid item xs={12} md={6} lg={4} key={topic._id}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                lg={4}
+                key={topic._id}
+                style={{ marginBottom: "25px" }}
+              >
                 <Paper
                   style={{
                     padding: "1rem",
@@ -98,7 +138,7 @@ function Educational() {
                       alt={topic.topicTitle}
                       style={{
                         width: "100%",
-                        maxHeight: "200px",
+                        maxHeight: "300px",
                         objectFit: "cover",
                         marginBottom: "1rem",
                       }}
