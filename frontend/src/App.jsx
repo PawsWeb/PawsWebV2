@@ -29,6 +29,7 @@ import StaffCreateListingPage from './Components/Staff/CreateListingPage';
 import AdopterListingPage from './Components/Adopter/ListingPage';
 import EditListingPage from './Components/Admin/EditListingPage';
 
+
 export const IsLoggedInContext = createContext();
 export const SetIsLoggedInContext = createContext();
 export const UserRoleContext = createContext();
@@ -98,7 +99,7 @@ function App() {
               <Route path="/admin/create-listing" element={<AdminCreateListingPage />} />
               <Route path="/staff/listing-page" element={<StaffListingPage />} />
               <Route path="/staff/create-listing" element={<StaffCreateListingPage />} />
-              <Route path="/adopter/create-listing" element={<AdopterListingPage />} />
+              <Route path="/adopter/listing-page" element={<AdopterListingPage />} />
               <Route path="/admin/edit-listing/:id" element={<EditListingPage />} />
               
             </Routes>

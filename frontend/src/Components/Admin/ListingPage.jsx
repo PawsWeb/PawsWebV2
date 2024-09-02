@@ -4,14 +4,28 @@ import axios from 'axios';
 
 const ListingPage = () => {
   const [pets, setPets] = useState([]);
+  const [filteredPets, setFilteredPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({ breed: [], size: [], gender: [] });
+  const [allBreeds, setAllBreeds] = useState([]);
+  const [allSizes, setAllSizes] = useState([]);
+  const [allGenders, setAllGenders] = useState(['Male', 'Female', 'Unknown']);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchPets = async () => {
       try {
         const response = await axios.get('http://localhost:3001/getPets');
         setPets(response.data);
+        setFilteredPets(response.data);
+
+        // Extract unique breeds and sizes from the data
+        const breeds = [...new Set(response.data.map(pet => pet.breed))];
+        const sizes = [...new Set(response.data.map(pet => pet.size))];
+
+        setAllBreeds(breeds);
+        setAllSizes(sizes);
       } catch (err) {
         setError('Failed to fetch pets');
         console.error('Error fetching pets:', err);
@@ -23,12 +37,52 @@ const ListingPage = () => {
     fetchPets();
   }, []);
 
+  useEffect(() => {
+    const applyFilters = () => {
+      const { breed, size, gender } = filters;
+      let results = pets;
+
+      if (breed.length > 0) {
+        results = results.filter(pet => breed.includes(pet.breed));
+      }
+
+      if (size.length > 0) {
+        results = results.filter(pet => size.includes(pet.size));
+      }
+
+      if (gender.length > 0) {
+        results = results.filter(pet => gender.includes(pet.gender));
+      }
+
+      setFilteredPets(results);
+    };
+
+    applyFilters();
+  }, [filters, pets]);
+
+  const handleFilterChange = (category, value) => {
+    setFilters(prevFilters => {
+      const newFilters = { ...prevFilters };
+      if (newFilters[category].includes(value)) {
+        newFilters[category] = newFilters[category].filter(item => item !== value);
+      } else {
+        newFilters[category].push(value);
+      }
+      return newFilters;
+    });
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(prevState => !prevState);
+  };
+
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this listing?');
     if (confirmDelete) {
       try {
         await axios.delete(`http://localhost:3001/admin/delete-listing/${id}`);
-        setPets(pets.filter(pet => pet._id !== id)); // Remove the deleted pet from the list
+        setPets(pets.filter(pet => pet._id !== id));
+        setFilteredPets(filteredPets.filter(pet => pet._id !== id));
         alert('Pet listing deleted successfully');
       } catch (err) {
         console.error('Error deleting pet listing:', err);
@@ -51,28 +105,27 @@ const ListingPage = () => {
       padding: '20px',
       maxWidth: '1200px',
       margin: '33vh auto',
+      position: 'relative',
+      minHeight: '80vh',
     },
     createListingButton: {
       position: 'absolute',
-      top: '120px',
-      right: '60px',
+      top: '20px',
+      right: '20px',
       padding: '10px 20px',
-      backgroundColor: '#007bff',
-      color: 'white',
+      backgroundColor: '#f4e3d3',
+      color: '#453a2f',
       border: 'none',
       borderRadius: '5px',
       cursor: 'pointer',
       textDecoration: 'none',
       fontSize: '16px',
-    },
-    createListingButtonHover: {
-      backgroundColor: '#0056b3',
+      zIndex: 1000,
     },
     petListings: {
-      display: 'flex',
-      flexWrap: 'wrap',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)', // Three equal-width columns
       gap: '20px',
-      justifyContent: 'flex-start',
     },
     petCard: {
       backgroundColor: '#ffffff',
@@ -80,12 +133,11 @@ const ListingPage = () => {
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       padding: '20px',
       transition: 'transform 0.2s',
-      flex: '1 1 calc(33% - 20px)',
       boxSizing: 'border-box',
       position: 'relative',
-    },
-    petCardHover: {
-      transform: 'translateY(-5px)',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
     },
     petCardTitle: {
       marginTop: '0',
@@ -96,19 +148,15 @@ const ListingPage = () => {
       color: '#666666',
     },
     imageContainer: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      gap: '10px',
       marginBottom: '10px',
     },
     image: {
-      width: '200px',
+      width: '100%',
       height: '200px',
       objectFit: 'cover',
       borderRadius: '8px',
     },
     editButton: {
-      marginTop: '10px',
       padding: '8px 15px',
       color: 'white',
       border: 'none',
@@ -116,16 +164,11 @@ const ListingPage = () => {
       cursor: 'pointer',
       textDecoration: 'none',
       fontSize: '14px',
-      position: 'flex',
-      bottom: '20px',
       backgroundColor: '#28a745',
-      right: '120px',
-    },
-    editButtonHover: {
-      backgroundColor: '#218838',
+      marginBottom: '10px',
+      textAlign: 'center',
     },
     deleteButton: {
-      marginTop: '10px',
       padding: '8px 15px',
       color: 'white',
       border: 'none',
@@ -133,16 +176,42 @@ const ListingPage = () => {
       cursor: 'pointer',
       textDecoration: 'none',
       fontSize: '14px',
-      position: 'flex',
-      bottom: '20px',
       backgroundColor: '#dc3545',
-      right: '20px',
     },
-    deleteButtonHover: {
-      backgroundColor: '#c82333',
+    filterContainer: {
+      marginBottom: '20px',
+      paddingTop: '60px',
     },
-
+    dropdown: {
+      position: 'relative',
+      display: 'inline-block',
+    },
+    dropdownButton: {
+      padding: '10px',
+      backgroundColor: '#007bff',
+      color: 'white',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+    },
+    dropdownContent: {
+      display: dropdownOpen ? 'block' : 'none',
+      position: 'absolute',
+      backgroundColor: '#f9f9f9',
+      minWidth: '240px',
+      boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+      zIndex: 1,
+      padding: '10px',
+    },
+    dropdownOption: {
+      padding: '8px 10px',
+      cursor: 'pointer',
+    },
+    checkbox: {
+      marginRight: '10px',
+    },
   };
+  
 
   return (
     <div style={styles.listingPage}>
@@ -150,9 +219,80 @@ const ListingPage = () => {
         <button style={styles.createListingButton}>Create New Listing</button>
       </Link>
       <h1>Pet Listings</h1>
+
+      {/* Combined Filter Dropdown */}
+      <div style={styles.filterContainer}>
+        <div style={styles.dropdown}>
+          <button onClick={toggleDropdown} style={styles.dropdownButton}>
+            Filter Options
+          </button>
+          <div style={styles.dropdownContent}>
+            {/* Breed Filters */}
+            <div>
+              <h4>Breed</h4>
+              {allBreeds.map((breed, index) => (
+                <div
+                  key={index}
+                  style={styles.dropdownOption}
+                >
+                  <input
+                    type="checkbox"
+                    id={`breed-${index}`}
+                    style={styles.checkbox}
+                    checked={filters.breed.includes(breed)}
+                    onChange={() => handleFilterChange('breed', breed)}
+                  />
+                  <label htmlFor={`breed-${index}`}>{breed}</label>
+                </div>
+              ))}
+            </div>
+
+            {/* Size Filters */}
+            <div>
+              <h4>Size</h4>
+              {allSizes.map((size, index) => (
+                <div
+                  key={index}
+                  style={styles.dropdownOption}
+                >
+                  <input
+                    type="checkbox"
+                    id={`size-${index}`}
+                    style={styles.checkbox}
+                    checked={filters.size.includes(size)}
+                    onChange={() => handleFilterChange('size', size)}
+                  />
+                  <label htmlFor={`size-${index}`}>{size}</label>
+                </div>
+              ))}
+            </div>
+
+            {/* Gender Filters */}
+            <div>
+              <h4>Gender</h4>
+              {allGenders.map((gender, index) => (
+                <div
+                  key={index}
+                  style={styles.dropdownOption}
+                >
+                  <input
+                    type="checkbox"
+                    id={`gender-${index}`}
+                    style={styles.checkbox}
+                    checked={filters.gender.includes(gender)}
+                    onChange={() => handleFilterChange('gender', gender)}
+                  />
+                  <label htmlFor={`gender-${index}`}>{gender}</label>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div style={styles.petListings}>
-        {pets.length > 0 ? (
-          pets.map((pet, index) => (
+        {filteredPets.length > 0 ? (
+          filteredPets.map((pet, index) => (
             <div key={index} style={styles.petCard}>
               <div style={styles.imageContainer}>
                 {pet.images.map((image, index) => (
