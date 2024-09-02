@@ -13,29 +13,50 @@ const CreateListingPage = () => {
         description: ''
     });
 
+    const [images, setImages] = useState([]);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleImageChange = (e) => {
+        setImages(e.target.files);
     };
 
     const navigate = useNavigate();
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const { name, breed, size, age, gender, shelter, description } = formData;
+        const formDataObj = new FormData();
+        formDataObj.append('name', formData.name);
+        formDataObj.append('breed', formData.breed);
+        formDataObj.append('size', formData.size);
+        formDataObj.append('age', formData.age);
+        formDataObj.append('gender', formData.gender);
+        formDataObj.append('shelter', formData.shelter);
+        formDataObj.append('description', formData.description);
+
+        for (let i = 0; i < images.length; i++) {
+            formDataObj.append('images', images[i]);
+        }
         
         axios
-            .post("http://localhost:3001/admin/create-listing", { name, breed, size, age, gender, shelter, description })
+            .post("http://localhost:3001/admin/create-listing", formDataObj, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
             .then((result) => {
-            if (result.status === 201) {
-                navigate("/admin/listing-page");
-            }
+                if (result.status === 201) {
+                    navigate("/admin/listing-page");
+                }
             })
             .catch((err) => {
-            if (err.response && err.response.status === 400) {
-                window.alert("Please check input fields again");
-            } else {
-                console.log(err);
-            }
+                if (err.response && err.response.status === 400) {
+                    window.alert("Please check input fields again");
+                } else {
+                    console.log(err);
+                }
             });
     };
 
@@ -186,6 +207,17 @@ const CreateListingPage = () => {
                         onChange={handleChange}
                         required
                         style={styles.textarea}
+                    />
+                </label>
+                <label style={styles.label}>
+                    Images:
+                    <input
+                        type="file"
+                        name="images"
+                        onChange={handleImageChange}
+                        multiple
+                        required
+                        style={styles.input}
                     />
                 </label>
                 <button type="submit" style={styles.button}>Submit</button>

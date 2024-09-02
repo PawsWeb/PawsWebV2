@@ -10,6 +10,8 @@ const PetsModel = require("./models/Pets");
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const Homepage = require("./models/Homepage");
+const multer = require("multer");
+const path = require('path');
 
 dotenv.config();
 const app = express();
@@ -21,6 +23,17 @@ app.use(
     credentials: true,
   })
 );
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Configure nodemailer
 const transporter = nodemailer.createTransport({
@@ -47,6 +60,8 @@ app.use(
     cookie: { maxAge: 24 * 60 * 60 * 1000 },
   })
 );
+
+app.use('/backend/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', async (req, res) => {
   try {
@@ -195,19 +210,22 @@ app.listen(process.env.PORT || 3001, () => {
   console.log(`Server is running on port ${process.env.PORT || 3001}`);
 });
 
-app.post("/admin/create-listing", async (req, res) => {
+app.post("/admin/create-listing", upload.array('images', 10), async (req, res) => {
   const { name, breed, size, age, gender, shelter, description } = req.body;
+  const images = req.files.map(file => file.filename); 
+  
   try {
-    
-    const newPet = new PetsModel({
-      name,
-      breed,
-      size,
-      age,
-      gender,
-      shelter,
-      description,
-  });
+      const newPet = new PetsModel({
+          name,
+          breed,
+          size,
+          age,
+          gender,
+          shelter,
+          description,
+          images
+      });
+
       await newPet.save();
 
       res.status(201).json({ message: "Pet listing added successfully!" });
