@@ -27,7 +27,7 @@ import AdminListingPage from "./Pages/Admin/ListingPage";
 import AdminCreateListingPage from "./Pages/Admin/CreateListingPage";
 import StaffListingPage from "./Pages/Staff/ListingPage";
 import StaffCreateListingPage from "./Pages/Staff/CreateListingPage";
-import AdopterListingPage from "./Pages/Adopter/ListingPage";
+import AdopterListingPage from "./Pages/General/ListingPage";
 import EditListingPage from "./Pages/Admin/EditListingPage";
 
 
