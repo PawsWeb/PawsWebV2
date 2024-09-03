@@ -35,7 +35,7 @@ function VerifyOtp() {
     fontWeight: "700",
     backgroundColor: "#f4e3d3",
     color: "#453a2f",
-    borderRadius: "0.5rem"
+    borderRadius: "0.5rem",
   };
 
   const handleVerifyOtp = (e) => {
@@ -56,19 +56,21 @@ function VerifyOtp() {
   return (
     <Grid align="center">
       <Paper
-          style={paperStyle}
-          sx={{
-            width: {
-              xs: "80vw",
-              sm: "50vw",
-              md: "40vw",
-              lg: "30vw",
-              xl: "20vw",
-            },
-            height: "60vh",
-          }}
-        >
-        <Typography style={heading}>Enter the OTP sent to your email</Typography>
+        style={paperStyle}
+        sx={{
+          width: {
+            xs: "80vw",
+            sm: "50vw",
+            md: "40vw",
+            lg: "30vw",
+            xl: "20vw",
+          },
+          height: "60vh",
+        }}
+      >
+        <Typography style={heading}>
+          Enter the OTP sent to your email
+        </Typography>
         <form onSubmit={handleVerifyOtp}>
           <TextField
             style={row}

@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from "react";
+import axios from "axios";
 import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
-import { SetIsLoggedInContext, UserRoleContext } from '../../App'
+import { SetIsLoggedInContext, UserRoleContext } from "../../App";
 
 function Login() {
   const setIsLoggedIn = useContext(SetIsLoggedInContext);
@@ -11,7 +11,7 @@ function Login() {
   const paperStyle = {
     height: "auto",
     padding: "2rem",
-    margin: "100px auto",
+    margin: "150px auto",
     borderRadius: "0.5rem",
     border: "1px solid #453a2f",
     boxShadow: "10px 10px 10px #453a2f",
@@ -56,8 +56,7 @@ function Login() {
               if (response.data.user) {
                 setIsLoggedIn(true);
                 setUserRole(response.data.user.role);
-                navigate("/home", { state: { user: response.data.user },
-                });
+                navigate("/home", { state: { user: response.data.user } });
               }
             });
         } else {

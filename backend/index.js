@@ -5,13 +5,15 @@ const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const UserModel = require("./models/User");
 const PetsModel = require("./models/Pets");
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const Homepage = require("./models/Homepage");
 const multer = require("multer");
 const path = require('path');
+const UserModel = require("./models/User");
+const Homepage = require("./models/Homepage");
+const Faq = require("./models/Faq");
+const Educational = require("./models/Educational");
 
 dotenv.config();
 const app = express();
@@ -34,10 +36,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-// Configure nodemailer
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Or use a different email service
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -62,7 +62,6 @@ app.use(
 );
 
 app.use('/backend/uploads', express.static(path.join(__dirname, 'uploads')));
-
 app.get('/', async (req, res) => {
   try {
     const content = await Homepage.findOne({ published: true });
@@ -81,19 +80,19 @@ app.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
-    const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999);
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new UserModel({
       name,
       email,
       password: hashedPassword,
       role,
-      otp, // Save OTP for verification
-      otpExpires: Date.now() + 5 * 60 * 1000, // OTP expires in 5 minutes
+      otp,
+      otpExpires: Date.now() + 5 * 60 * 1000,
     });
 
     await newUser.save();
-    // Send OTP email
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -121,7 +120,6 @@ app.post('/verify-otp', async (req, res) => {
       return res.status(400).json({ error: 'Invalid or expired OTP' });
     }
 
-    // OTP is valid; proceed with registration or account activation
     user.otp = undefined;
     user.otpExpires = undefined;
     await user.save();
@@ -165,7 +163,7 @@ app.post('/logout', (req, res) => {
       console.error('Logout error:', err);
       return res.status(500).send('Failed to log out');
     }
-    res.clearCookie('connect.sid'); // or any session-related cookie
+    res.clearCookie('connect.sid');
     res.status(200).send('Logged out');
   });
 });
@@ -178,25 +176,100 @@ app.get("/user", (req, res) => {
   }
 });
 
+app.get('/educationals', async (req, res) => {
+  try {
+    const educationals = await Educational.find();
+    res.json(educationals);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/educationals', async (req, res) => {
+  const educational = new Educational(req.body);
+  try {
+    await educational.save();
+    res.status(201).json(educational);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.put('/educational/:id', async (req, res) => {
+  try {
+    const educational = await Educational.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(educational);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.delete('/educational/:id', async (req, res) => {
+  try {
+    await Educational.findByIdAndDelete(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+
+
+// FAQ
+app.get('/faqs', async (req, res) => {
+  try {
+    const faqs = await Faq.find();
+    res.json(faqs);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/faqs', async (req, res) => {
+  const faq = new Faq(req.body);
+  try {
+    await faq.save();
+    res.status(201).json(faq);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.put('/faq/:id', async (req, res) => {
+  try {
+    const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(faq);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+app.delete('/faq/:id', async (req, res) => {
+  try {
+    await Faq.findByIdAndDelete(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 app.post('/contact', async (req, res) => {
   const { name, email, message, subject } = req.body;
 
   try {
-    // Construct the email content
     const mailOptions = {
       from: email, 
       to: 'pawsweb.2024@gmail.com',
       replyTo: email, 
       subject: `Contact Form Submission: ${subject}`,
 
-      text: `You have received a new message from the contact form on your website.\n\n` +
+      text: `You have received a new message from the contact form on your website.\n\n `+
             `Name: ${name}\n` +
             `Email: ${email}\n\n` +
             `Subject: ${subject}\n\n` +
             `Message:\n${message}`,
     };
 
-    // Send the email using the nodemailer transporter
     await transporter.sendMail(mailOptions);
 
     res.status(200).json({ message: 'Your message has been sent successfully!' });

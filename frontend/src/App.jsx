@@ -1,33 +1,37 @@
-import React, { useState, useEffect, createContext } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect, createContext } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import axios from "axios";
 
-import GeneralNavbar from './Components/Navbar/GeneralNavbar';
-import AdminNavbar from './Components/Navbar/AdminNavbar';
-import StaffNavbar from './Components/Navbar/StaffNavbar';
-import AdopterNavbar from './Components/Navbar/AdopterNavbar';
+import GeneralNavbar from "./Components/Navbar/GeneralNavbar";
+import AdminNavbar from "./Components/Navbar/AdminNavbar";
+import StaffNavbar from "./Components/Navbar/StaffNavbar";
+import AdopterNavbar from "./Components/Navbar/AdopterNavbar";
+import Footer from "./Components/Footer/Footer";
 
-import Home from './Components/General/Home';
-import HomepageEditor from './Components/Admin/HomepageEditor';
-import Login from './Components/General/Login';
-import Logout from './Components/General/Logout';
-import Register from './Components/General/Register';
-import VerifyOtp from './Components/General/VerifyOtp';
-import Pets from './Components/General/Pets';
-import AdopterPets from './Components/Adopter/AdopterPets';
-import StaffPets from './Components/Staff/StaffPets';
-import Educational from './Components/General/Educational';
-import EducationalEditor from './Components/Admin/EducationalEditor';
-import Faq from './Components/General/Faq';
-import FaqEditor from './Components/Admin/FaqEditor';
-import Contact from './Components/General/Contact';
+import Home from "./Pages/General/Home";
+import HomepageEditor from "./Pages/Admin/HomepageEditor";
+import Login from "./Pages/General/Login";
+import Logout from "./Pages/General/Logout";
+import Register from "./Pages/General/Register";
+import VerifyOtp from "./Pages/General/VerifyOtp";
+import Pets from "./Pages/General/Pets";
+import StaffPets from "./Pages/Staff/StaffPets";
+import UploadPet from "./Pages/Staff/UploadPet";
+import Educational from "./Pages/General/Educational";
+import EducationalEditor from "./Pages/Admin/EducationalEditor";
+import Faq from "./Pages/General/Faq";
+import FaqEditor from "./Pages/Admin/FaqEditor";
+import Contact from "./Pages/General/Contact";
 
-import AdminListingPage from './Components/Admin/ListingPage';
-import AdminCreateListingPage from './Components/Admin/CreateListingPage';
-import StaffListingPage from './Components/Staff/ListingPage';
-import StaffCreateListingPage from './Components/Staff/CreateListingPage';
-import AdopterListingPage from './Components/Adopter/ListingPage';
-import EditListingPage from './Components/Admin/EditListingPage';
+import AdminListingPage from "./Pages/Admin/ListingPage";
+import AdminCreateListingPage from "./Pages/Admin/CreateListingPage";
+import StaffListingPage from "./Pages/Staff/ListingPage";
+import StaffCreateListingPage from "./Pages/Staff/CreateListingPage";
+import AdopterListingPage from "./Pages/Adopter/ListingPage";
+import EditListingPage from "./Pages/Admin/EditListingPage";
+
+
+
 
 
 export const IsLoggedInContext = createContext();
@@ -37,7 +41,7 @@ export const UserRoleContext = createContext();
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
-  const [userName, setUserName] =useState("");
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     axios
@@ -62,12 +66,12 @@ function App() {
 
   const renderNavbar = () => {
     switch (userRole) {
-      case 'admin':
-        return <AdminNavbar userName={userName}/>;
-      case 'staff':
-        return <StaffNavbar userName={userName}/>;
-      case 'adopter':
-        return <AdopterNavbar userName={userName}/>;
+      case "admin":
+        return <AdminNavbar userName={userName} />;
+      case "staff":
+        return <StaffNavbar userName={userName} />;
+      case "adopter":
+        return <AdopterNavbar userName={userName} />;
       default:
         return <GeneralNavbar />;
     }
@@ -101,8 +105,19 @@ function App() {
               <Route path="/staff/create-listing" element={<StaffCreateListingPage />} />
               <Route path="/adopter/listing-page" element={<AdopterListingPage />} />
               <Route path="/admin/edit-listing/:id" element={<EditListingPage />} />
+              <Route path="/staff/upload" element={<UploadPet />} />              
+              <Route path="/staff/pets" element={<StaffPets />} />
+              <Route path="/educational" element={<Educational />} />
+              <Route
+                path="/admin/educational"
+                element={<EducationalEditor />}
+              />
+              <Route path="/faq" element={<Faq />} />
+              <Route path="/admin/faq" element={<FaqEditor />} />
+              <Route path="/contact" element={<Contact />} />
               
             </Routes>
+            <Footer />
           </Router>
         </UserRoleContext.Provider>
       </SetIsLoggedInContext.Provider>
