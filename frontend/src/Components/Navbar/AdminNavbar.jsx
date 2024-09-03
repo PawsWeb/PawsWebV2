@@ -136,7 +136,7 @@ function AdminNavbar({ userName }) {
                   variant="text"
                   style={navBtnStyle}
                   component={Link}
-                  to={`/${text.toLowerCase()}`}
+                  to={`/admin/${text.toLowerCase()}`}
                 >
                   {text}
                 </Button>

@@ -108,7 +108,7 @@ function StaffNavbar({ userName }) {
         onClick={handleMenuClose}
         style={{ fontWeight: "600" }}
         component={Link}
-        to={`/${text.toLowerCase()}`}
+        to={`/staff/${text.toLowerCase()}`}
       >
         {text}
       </MenuItem>

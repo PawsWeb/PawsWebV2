@@ -17,7 +17,7 @@ import VerifyOtp from "./Pages/General/VerifyOtp";
 import Pets from "./Pages/General/Pets";
 import StaffPets from "./Pages/Staff/StaffPets";
 import UploadPet from "./Pages/Staff/UploadPet";
-import Educational from "./Pages/General/Educational";
+// import Educational from "./Pages/General/Educational";
 import EducationalEditor from "./Pages/Admin/EducationalEditor";
 import Faq from "./Pages/General/Faq";
 import FaqEditor from "./Pages/Admin/FaqEditor";
@@ -29,9 +29,6 @@ import StaffListingPage from "./Pages/Staff/ListingPage";
 import StaffCreateListingPage from "./Pages/Staff/CreateListingPage";
 import AdopterListingPage from "./Pages/General/ListingPage";
 import EditListingPage from "./Pages/Admin/EditListingPage";
-
-
-
 
 
 export const IsLoggedInContext = createContext();
@@ -91,30 +88,19 @@ function App() {
               <Route path="/verify-otp" element={<VerifyOtp />} />
               <Route path="/home" element={<Home />} />
               <Route path="/admin/home" element={<HomepageEditor />} />
-              <Route path="/pets" element={<Pets />} />
-              <Route path="/adopter/pets" element={<AdopterPets />} />
               <Route path="/staff/pets" element={<StaffPets />} />
-              <Route path="/educational" element={<Educational />} />
               <Route path="/admin/educational" element={<EducationalEditor />} />
               <Route path="/faq" element={<Faq />} />
               <Route path="/admin/faq" element={<FaqEditor />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/admin/listing-page" element={<AdminListingPage />} />
+              <Route path="/admin/pets" element={<AdminListingPage />} />
               <Route path="/admin/create-listing" element={<AdminCreateListingPage />} />
               <Route path="/staff/listing-page" element={<StaffListingPage />} />
               <Route path="/staff/create-listing" element={<StaffCreateListingPage />} />
-              <Route path="/adopter/listing-page" element={<AdopterListingPage />} />
+              <Route path="/pets" element={<AdopterListingPage />} />
               <Route path="/admin/edit-listing/:id" element={<EditListingPage />} />
               <Route path="/staff/upload" element={<UploadPet />} />              
-              <Route path="/staff/pets" element={<StaffPets />} />
-              <Route path="/educational" element={<Educational />} />
-              <Route
-                path="/admin/educational"
-                element={<EducationalEditor />}
-              />
-              <Route path="/faq" element={<Faq />} />
-              <Route path="/admin/faq" element={<FaqEditor />} />
-              <Route path="/contact" element={<Contact />} />
+              {/* <Route path="/educational" element={<Educational />} /> */}
               
             </Routes>
             <Footer />
