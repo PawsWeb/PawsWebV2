@@ -302,6 +302,16 @@ function Pets() {
             </Link>
           </Grid>
         )}
+
+        {userRole === "admin" && (
+          <Grid item>
+            <Link to="/admin/pets" style={{ textDecoration: "none" }}>
+              <Button variant="contained" style={buttonStyle}>
+                Pets Dashboard
+              </Button>
+            </Link>
+          </Grid>
+        )}
       </Grid>
       <Typography style={subtitle}>Click on the Pet's Image for more details</Typography>
       <Divider style={{ margin: "2rem 0" }} />

@@ -17,6 +17,7 @@ import Register from "./Pages/General/Register";
 import VerifyOtp from "./Pages/General/VerifyOtp";
 
 import Pets from "./Pages/General/Pets";
+import PetEditor from "./Pages/Admin/PetEditor";
 import LikedPets from "./Pages/Adopter/LikedPets";
 import StaffPets from "./Pages/Staff/StaffPets";
 import AddPet from "./Pages/Staff/AddPet";
@@ -92,6 +93,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/verify-otp" element={<VerifyOtp />} />
                 <Route path="/pets" element={<Pets />} />
+                <Route path="/admin/pets" element={<PetEditor />} />
                 <Route path="/adopter/liked-pets" element={<LikedPets />} />
                 <Route path="/staff/pets" element={<StaffPets userName={userName}/>} />
                 <Route path="/add-pet" element={<AddPet />} />
