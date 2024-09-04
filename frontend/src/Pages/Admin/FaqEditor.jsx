@@ -42,7 +42,7 @@ function FaqEditor() {
   };
 
   const editDltBtn = {
-    color: "#574e44"
+    color: "#574e44",
   };
 
   const [blogs, setBlogs] = useState([]);
@@ -53,14 +53,14 @@ function FaqEditor() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/faqs")
+      .get("http://localhost:3001/faq")
       .then((response) => setBlogs(response.data))
       .catch((error) => console.error(error));
   }, []);
 
   const handlePublishBlog = () => {
     axios
-      .post("http://localhost:3001/faqs", {
+      .post("http://localhost:3001/faq", {
         blogTitle: newBlogTitle,
         questions,
       })
@@ -130,9 +130,14 @@ function FaqEditor() {
 
   const fetchBlogs = () => {
     axios
-      .get("http://localhost:3001/faqs")
+      .get("http://localhost:3001/faq")
       .then((response) => setBlogs(response.data))
       .catch((error) => console.error(error));
+  };
+
+  const truncateContent = (content, charLimit) => {
+    if (content.length <= charLimit) return content;
+    return content.slice(0, charLimit) + "...";
   };
 
   return (
@@ -292,7 +297,7 @@ function FaqEditor() {
                     variant="body1"
                     style={{ overflowWrap: "break-word" }}
                   >
-                    {q.answer}
+                    {truncateContent(q.answer, 300)}
                   </Typography>
                 </div>
               ))}

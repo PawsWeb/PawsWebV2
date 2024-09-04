@@ -57,7 +57,12 @@ function Register() {
     }
 
     axios
-      .post("http://localhost:3001/register", { name, email, password, role })
+      .post("http://localhost:3001/auth/register", {
+        name,
+        email,
+        password,
+        role,
+      })
       .then((result) => {
         if (result.status == 201) {
           console.log("User registered. OTP sent to email.");

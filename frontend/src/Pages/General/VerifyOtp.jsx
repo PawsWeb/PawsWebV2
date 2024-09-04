@@ -41,7 +41,7 @@ function VerifyOtp() {
   const handleVerifyOtp = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3001/verify-otp", { email, otp })
+      .post("http://localhost:3001/auth/verify-otp", { email, otp })
       .then((result) => {
         if (result.status === 200) {
           console.log("OTP verified. Account activated.");

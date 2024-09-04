@@ -166,7 +166,7 @@ function GeneralNavbar() {
             style={{ textDecoration: "none", marginLeft: "auto" }}
           >
             <IconButton aria-label="Login">
-              <LoginIcon style={loginBtn}/>
+              <LoginIcon style={loginBtn} />
             </IconButton>
           </Link>
         </Box>

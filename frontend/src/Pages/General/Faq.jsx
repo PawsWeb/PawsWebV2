@@ -1,18 +1,36 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Grid, Typography, Container, Button, Divider } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Container,
+  Button,
+  IconButton,
+  Divider,
+  Paper,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import { UserRoleContext } from "../../App";
+import { UserContext } from "../../App";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // Material UI icon for expand
 
 function Faq() {
-  const { userRole } = useContext(UserRoleContext);
+  const { userRole } = useContext(UserContext);
   const [faqs, setFaqs] = useState([]);
-
+  const [expandedQuestion, setExpandedQuestion] = useState({});
+  const paperStyle = {
+    height: "auto",
+    padding: "5px 10px",
+    margin: "10px 0",
+    borderRadius: "0.5rem",
+    border: "1px solid #453a2f",
+    boxShadow: "2px 2px 2px #453a2f",
+  };
   const heading = { fontSize: "2.5rem", fontWeight: "600" };
   const subtitle = {
     color: "grey",
     fontSize: "0.9rem",
     fontWeight: "100",
+    marginTop: "10px",
     marginBottom: "40px",
   };
   const buttonStyle = {
@@ -37,10 +55,16 @@ function Faq() {
     overflowWrap: "break-word",
   };
 
+  const handleExpandClick = (blogId, questionId) => {
+    setExpandedQuestion(
+      (prev) =>
+        prev === `${blogId}-${questionId}` ? null : `${blogId}-${questionId}` // Toggle current question
+    );
+  };
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/faqs")
+      .get("http://localhost:3001/faq")
       .then((response) => setFaqs(response.data))
       .catch((error) => console.error("Error fetching FAQs:", error));
   }, []);
@@ -78,9 +102,8 @@ function Faq() {
           <div key={faq._id} style={faqContainerStyle}>
             <Typography
               variant="h5"
-              align= "left"
-              marginBottom= "15px"
-              padding= "10px 0"
+              align="left"
+              margin="5px 0"
               color={"black"}
               style={{
                 fontWeight: "600",
@@ -89,17 +112,43 @@ function Faq() {
               }}
             >
               {faq.blogTitle}
-            </Typography >
-            {faq.questions.map((q, index) => (
-              <div key={index}>
-                <Typography variant="h6" style={questionStyle}>
-                  {q.question}
-                </Typography>
-                <Typography variant="body1" style={answerStyle}>
-                  {q.answer}
-                </Typography>
-              </div>
+            </Typography>
+            {faq.questions.map((q) => (
+              <Paper key={q._id} style={paperStyle}>
+                <Grid
+                  container
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Grid item xs={11}>
+                    <Typography variant="h6" style={questionStyle}>
+                      {q.question}
+                    </Typography>
+                  </Grid>
+                  <Grid>
+                    <IconButton
+                      onClick={() => handleExpandClick(faq._id, q._id)}
+                    >
+                      <ExpandMoreIcon
+                        style={{
+                          transform:
+                            expandedQuestion === `${faq._id}-${q._id}`
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)",
+                          transition: "transform 0.3s ease",
+                        }}
+                      />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+                {expandedQuestion === `${faq._id}-${q._id}` && (
+                  <Typography variant="body1" style={answerStyle}>
+                    {q.answer}
+                  </Typography>
+                )}
+              </Paper>
             ))}
+            <Divider style={{ margin: "1rem 0" }} />
           </div>
         ))
       )}

@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
-import { SetIsLoggedInContext, UserRoleContext } from "../../App";
+import { SetIsLoggedInContext, UserContext } from "../../App";
 
 function Login() {
   const setIsLoggedIn = useContext(SetIsLoggedInContext);
-  const { setUserRole } = useContext(UserRoleContext);
+  const { setUserRole } = useContext(UserContext);
 
   const paperStyle = {
     height: "auto",
@@ -44,14 +44,14 @@ function Login() {
     e.preventDefault();
     axios
       .post(
-        "http://localhost:3001/login",
+        "http://localhost:3001/auth/login",
         { email, password },
         { withCredentials: true }
       )
       .then((result) => {
         if (result.data === "Success") {
           axios
-            .get("http://localhost:3001/user", { withCredentials: true })
+            .get("http://localhost:3001/auth/user", { withCredentials: true })
             .then((response) => {
               if (response.data.user) {
                 setIsLoggedIn(true);

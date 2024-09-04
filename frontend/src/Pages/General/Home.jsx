@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserRoleContext } from "../../App";
+import { UserContext } from "../../App";
 import { Button, Typography, Grid, Paper } from "@mui/material";
 
 function Home() {
-  const { userRole } = useContext(UserRoleContext);
+  const { userRole } = useContext(UserContext);
   const navigate = useNavigate();
 
   const paperStyle = {
