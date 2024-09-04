@@ -8,12 +8,14 @@ function Home() {
   const navigate = useNavigate();
 
   const paperStyle = {
-    height: "auto",
     padding: "2rem",
     margin: "100px auto",
     borderRadius: "0.5rem",
     border: "1px solid #453a2f",
     boxShadow: "10px 10px 10px #453a2f",
+    width: "80vw", // Default width for extra-small screens
+    maxWidth: "400px", // Max width for larger screens
+    textAlign: "center", // Center-align text within the paper
   };
 
   const buttonStyle = {
@@ -29,32 +31,27 @@ function Home() {
   };
 
   return (
-    <Grid align="center">
-      <Paper
-        style={paperStyle}
-        sx={{
-          width: {
-            xs: "80vw",
-            sm: "50vw",
-            md: "40vw",
-            lg: "30vw",
-            xl: "20vw",
-          },
-          height: "60vh",
-        }}
-      >
-        <Typography variant="h4">Welcome to Home Page</Typography>
-        {userRole === "admin" && (
-          <Button
-            variant="contained"
-            style={buttonStyle}
-            onClick={handleHomepageEditor}
-          >
-            Admin Dashboard
-          </Button>
-        )}
-      </Paper>
-    </Grid>
+    <>
+      <Grid align="center">
+        <Paper style={paperStyle}>
+          <Typography variant="h4" gutterBottom>
+            Welcome to PawsWeb
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Discover your perfect pet companion today!
+          </Typography>
+          {userRole === "admin" && (
+            <Button
+              variant="contained"
+              style={buttonStyle}
+              onClick={handleHomepageEditor}
+            >
+              Admin Dashboard
+            </Button>
+          )}
+        </Paper>
+      </Grid>
+    </>
   );
 }
 
