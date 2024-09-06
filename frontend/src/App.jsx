@@ -1,32 +1,31 @@
-import React, { useState, useEffect, createContext } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect, createContext } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import axios from "axios";
 
-import GeneralNavbar from './Components/Navbar/GeneralNavbar';
-import AdminNavbar from './Components/Navbar/AdminNavbar';
-import StaffNavbar from './Components/Navbar/StaffNavbar';
-import AdopterNavbar from './Components/Navbar/AdopterNavbar';
-import Footer from './Components/Footer/Footer';
+import GeneralNavbar from "./Components/Navbar/GeneralNavbar";
+import AdminNavbar from "./Components/Navbar/AdminNavbar";
+import StaffNavbar from "./Components/Navbar/StaffNavbar";
+import AdopterNavbar from "./Components/Navbar/AdopterNavbar";
+import Footer from "./Components/Footer/Footer";
 
-import Home from './Pages/General/Home';
-import Login from './Pages/General/Login';
-import Logout from './Pages/General/Logout';
-import Register from './Pages/General/Register';
-import VerifyOtp from './Pages/General/VerifyOtp';
-import Pets from './Pages/General/Pets';
-import PetEditor from './Pages/Admin/PetEditor';
-import LikedPets from './Pages/Adopter/LikedPets';
-import StaffPets from './Pages/Staff/StaffPets';
-import AddPet from './Pages/Staff/AddPet';
-import Educational from './Pages/General/Educational';
-import EducationalEditor from './Pages/Admin/EducationalEditor';
-import Faq from './Pages/General/Faq';
-import FaqEditor from './Pages/Admin/FaqEditor';
-import Contact from './Pages/General/Contact';
-import Volunteer from './Pages/General/Volunteer';
-import Donate from './Pages/General/Donate';
-import Sponsor from './Pages/General/Sponsor';
-import ProtectedRoute from './Components/ProtectedRoute'; // Import the ProtectedRoute component
+import Home from "./Pages/General/Home";
+import Login from "./Pages/General/Login";
+import Logout from "./Pages/General/Logout";
+import Register from "./Pages/General/Register";
+import VerifyOtp from "./Pages/General/VerifyOtp";
+import Pets from "./Pages/General/Pets";
+import PetEditor from "./Pages/Admin/PetEditor";
+import LikedPets from "./Pages/Adopter/LikedPets";
+import StaffPets from "./Pages/Staff/StaffPets";
+import AddPet from "./Pages/Staff/AddPet";
+import Educational from "./Pages/General/Educational";
+import EducationalEditor from "./Pages/Admin/EducationalEditor";
+import Faq from "./Pages/General/Faq";
+import FaqEditor from "./Pages/Admin/FaqEditor";
+import Contact from "./Pages/General/Contact";
+import Volunteer from "./Pages/General/Volunteer";
+import Donate from "./Pages/General/Donate";
+import Sponsor from "./Pages/General/Sponsor";
 
 export const IsLoggedInContext = createContext();
 export const SetIsLoggedInContext = createContext();
@@ -40,7 +39,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3001/auth/user', { withCredentials: true })
+      .get("http://localhost:3001/auth/user", { withCredentials: true })
       .then((response) => {
         if (response.data.user) {
           setIsLoggedIn(true);
@@ -64,11 +63,11 @@ function App() {
 
   const renderNavbar = () => {
     switch (userRole) {
-      case 'admin':
+      case "admin":
         return <AdminNavbar userName={userName} />;
-      case 'staff':
+      case "staff":
         return <StaffNavbar userName={userName} />;
-      case 'adopter':
+      case "adopter":
         return <AdopterNavbar userName={userName} />;
       default:
         return <GeneralNavbar />;
@@ -78,11 +77,19 @@ function App() {
   return (
     <IsLoggedInContext.Provider value={isLoggedIn}>
       <SetIsLoggedInContext.Provider value={setIsLoggedIn}>
-        <UserContext.Provider value={{ userRole, setUserRole, userName, setUserName, userEmail, setUserEmail }}>
+        <UserContext.Provider
+          value={{
+            userRole,
+            setUserRole,
+            userName,
+            setUserName,
+            userEmail,
+            setUserEmail,
+          }}
+        >
           <Router>
             {renderNavbar()}
             <Routes>
-              {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -97,13 +104,17 @@ function App() {
               <Route path="/donate" element={<Donate />} />
               <Route path="/sponsor" element={<Sponsor />} />
 
-              {/* Protected Routes */}
-              <Route path="/admin/pets" element={<ProtectedRoute element={<PetEditor />} roles={['admin']} />} />
-              <Route path="/adopter/liked-pets" element={<ProtectedRoute element={<LikedPets />} roles={['adopter']} />} />
-              <Route path="/staff/pets" element={<ProtectedRoute element={<StaffPets userName={userName} />} roles={['staff']} />} />
-              <Route path="/add-pet" element={<ProtectedRoute element={<AddPet />} roles={['staff']} />} />
-              <Route path="/admin/educational" element={<ProtectedRoute element={<EducationalEditor />} roles={['admin']} />} />
-              <Route path="/admin/faq" element={<ProtectedRoute element={<FaqEditor />} roles={['admin']} />} />
+              <Route path="/admin/pets" element={<PetEditor />} />
+              <Route path="/adopter/liked-pets" element={<LikedPets />} />
+              <Route path="/staff/pets" element={<StaffPets />} />
+              <Route path="/add-pet" element={<AddPet />} />
+
+              <Route
+                path="/admin/educational"
+                element={<EducationalEditor />}
+              />
+
+              <Route path="/admin/faq" element={<FaqEditor />} />
             </Routes>
             <Footer />
           </Router>
