@@ -231,4 +231,17 @@ router.post('/adopt/:petId', async (req, res) => {
   }
 });
 
+router.get('/pets/spotlight', async (req, res) => {
+  try {
+    const pets = await Pet.find({ isAdopted: false })
+      .sort({ dateAdded: -1 })  // Sort by the most recent
+      .limit(3);                // Limit to the top 3
+
+    res.json(pets);
+  } catch (error) {
+    console.error("Error fetching spotlight pets:", error); // Log the error details
+    res.status(500).send("Error fetching spotlight pets");
+  }
+});
+
 module.exports = router;

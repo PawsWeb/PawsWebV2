@@ -37,7 +37,7 @@ function Pets() {
 
   const likeBtn = {
     color: "#b99976",
-    marginTop: "20px"
+    marginTop: "20px",
   };
 
   const subtitle = {
@@ -102,11 +102,15 @@ function Pets() {
   useEffect(() => {
     const fetchLikedPets = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/pet/liked-pets/${userName}`);
-        const likedPetsFromServer = new Set(response.data.map(pet => pet._id));
+        const response = await axios.get(
+          `http://localhost:3001/pet/liked-pets/${userName}`
+        );
+        const likedPetsFromServer = new Set(
+          response.data.map((pet) => pet._id)
+        );
         setLikedPets(likedPetsFromServer);
       } catch (err) {
-        console.error('Error fetching liked pets:', err);
+        console.error("Error fetching liked pets:", err);
       }
     };
 
@@ -159,9 +163,11 @@ function Pets() {
 
   const handleLikeToggle = async (petId) => {
     try {
-      const action = likedPets.has(petId) ? 'unlike' : 'like';
-      await axios.post(`http://localhost:3001/pet/${action}/${userName}/${petId}`);
-      
+      const action = likedPets.has(petId) ? "unlike" : "like";
+      await axios.post(
+        `http://localhost:3001/pet/${action}/${userName}/${petId}`
+      );
+
       setLikedPets((prevLikedPets) => {
         const updatedLikes = new Set(prevLikedPets);
         if (updatedLikes.has(petId)) {
@@ -172,7 +178,7 @@ function Pets() {
         return updatedLikes;
       });
     } catch (err) {
-      console.error('Error toggling like:', err);
+      console.error("Error toggling like:", err);
     }
   };
 
@@ -269,6 +275,18 @@ function Pets() {
                 <Typography variant="body1">
                   <strong>Description:</strong> {selectedPet.description}
                 </Typography>
+                {userRole === "adopter" && (
+                  <IconButton
+                    onClick={() => handleLikeToggle(selectedPet._id)}
+                    style={likeBtn}
+                  >
+                    {likedPets.has(selectedPet._id) ? (
+                      <FavoriteIcon />
+                    ) : (
+                      <FavoriteBorderIcon />
+                    )}
+                  </IconButton>
+                )}
               </Grid>
             </Paper>
           </Grid>
@@ -292,7 +310,7 @@ function Pets() {
             </Link>
           </Grid>
         )}
-        
+
         {userRole === "staff" && (
           <Grid item>
             <Link to="/staff/pets" style={{ textDecoration: "none" }}>
@@ -313,7 +331,9 @@ function Pets() {
           </Grid>
         )}
       </Grid>
-      <Typography style={subtitle}>Click on the Pet's Image for more details</Typography>
+      <Typography style={subtitle}>
+        Click on the Pet's Image for more details
+      </Typography>
       <Divider style={{ margin: "2rem 0" }} />
 
       {/* Filter Section */}
@@ -381,7 +401,6 @@ function Pets() {
           filteredPets.map((pet, index) => (
             <Grid item xs={12} sm={12} md={6} key={index}>
               <Paper
-                
                 style={{
                   padding: "1rem",
                   textAlign: "center",

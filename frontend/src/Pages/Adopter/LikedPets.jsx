@@ -8,12 +8,15 @@ import {
   Typography,
   Divider,
   Button,
+  IconButton,
   CircularProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 function LikedPets() {
-  const { userName, userEmail } = useContext(UserContext); // Destructure userEmail
+  const { userName, userEmail, userRole } = useContext(UserContext); // Destructure userEmail
 
   const [likedPets, setLikedPets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +49,10 @@ function LikedPets() {
     color: "white",
     marginBottom: "2rem",
   };
-
+  const likeBtn = {
+    color: "#b99976",
+    marginTop: "20px"
+  };
   const truncateContent = (content, charLimit) => {
     if (content.length <= charLimit) return content;
     return content.slice(0, charLimit) + "...";
@@ -185,6 +191,18 @@ function LikedPets() {
                 <Typography variant="body1">
                   <strong>Description:</strong> {selectedPet.description}
                 </Typography>
+                {userRole === "adopter" && (
+                    <IconButton
+                      onClick={() => handleLikeToggle(selectedPet._id)}
+                      style={likeBtn}
+                    >
+                      {likedPets.has(selectedPet._id) ? (
+                        <FavoriteIcon />
+                      ) : (
+                        <FavoriteBorderIcon />
+                      )}
+                    </IconButton>
+                  )}
               </Grid>
             </Paper>
           </Grid>
