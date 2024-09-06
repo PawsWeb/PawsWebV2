@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../App";
-
 import {
   Container,
   Button,
@@ -10,23 +9,15 @@ import {
   Grid,
   Paper,
   Divider,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
   CircularProgress,
   IconButton,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FilterComponent from "../../Components/FilterComponent";
 
 function Pets() {
   const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const title = {
-    fontSize: "1.5rem",
-    fontWeight: "600",
-    marginBottom: "1.5rem",
-  };
-
   const buttonStyle = {
     fontSize: "1rem",
     fontWeight: "700",
@@ -34,20 +25,16 @@ function Pets() {
     borderRadius: "0.5rem",
     color: "white",
   };
-
   const likeBtn = {
     color: "#b99976",
     marginTop: "20px",
   };
-
   const subtitle = {
     color: "grey",
     fontSize: "0.9rem",
     fontWeight: "100",
-    marginTop: "10px",
-    marginBottom: "40px",
+    marginBottom: "20px",
   };
-
   const backBtn = {
     fontSize: "1rem",
     fontWeight: "700",
@@ -60,15 +47,11 @@ function Pets() {
   const { userRole, userName } = useContext(UserContext);
 
   const [pets, setPets] = useState([]);
-  const [filteredPets, setFilteredPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({ breed: [], size: [], gender: [] });
-  const [allBreeds, setAllBreeds] = useState([]);
-  const [allSizes, setAllSizes] = useState([]);
-  const [allGenders, setAllGenders] = useState(["Male", "Female"]);
-  const [selectedPet, setSelectedPet] = useState(null); // New state for selected pet
-  const [likedPets, setLikedPets] = useState(new Set()); // State to track liked pets
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [likedPets, setLikedPets] = useState(new Set());
+  const [filteredPets, setFilteredPets] = useState([]);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -76,17 +59,11 @@ function Pets() {
         const response = await axios.get("http://localhost:3001/pet");
         setPets(response.data);
 
-        const breeds = [...new Set(response.data.map((pet) => pet.breed))];
-        const sizes = [...new Set(response.data.map((pet) => pet.size))];
-
-        setAllBreeds(breeds);
-        setAllSizes(sizes);
-
-        // Initially filter pets and sort to push adopted pets to the end
-        filterAndSortPets(response.data);
+        // Sort pets to push adopted ones to the end
+        const sortedPets = response.data.sort((a, b) => (a.isAdopted ? 1 : -1));
+        setPets(sortedPets);
       } catch (err) {
         setError("Failed to fetch pets");
-        console.error("Error fetching pets:", err);
       } finally {
         setLoading(false);
       }
@@ -95,9 +72,27 @@ function Pets() {
     fetchPets();
   }, []);
 
-  useEffect(() => {
-    filterAndSortPets(pets);
-  }, [filters, pets]);
+  // Apply the filters to the pets list
+  const handleFilterChange = (filters) => {
+    let filtered = pets;
+
+    if (filters.type !== "All") {
+      filtered = filtered.filter((pet) => pet.type === filters.type);
+    }
+    if (filters.breed !== "All") {
+      filtered = filtered.filter((pet) =>
+        pet.breed.toLowerCase().includes(filters.breed.toLowerCase())
+      );
+    }
+    if (filters.size !== "All") {
+      filtered = filtered.filter((pet) => pet.size === filters.size);
+    }
+    if (filters.gender !== "All") {
+      filtered = filtered.filter((pet) => pet.gender === filters.gender);
+    }
+
+    setFilteredPets(filtered);
+  };
 
   useEffect(() => {
     const fetchLikedPets = async () => {
@@ -105,10 +100,7 @@ function Pets() {
         const response = await axios.get(
           `http://localhost:3001/pet/liked-pets/${userName}`
         );
-        const likedPetsFromServer = new Set(
-          response.data.map((pet) => pet._id)
-        );
-        setLikedPets(likedPetsFromServer);
+        setLikedPets(new Set(response.data.map((pet) => pet._id)));
       } catch (err) {
         console.error("Error fetching liked pets:", err);
       }
@@ -116,42 +108,6 @@ function Pets() {
 
     fetchLikedPets();
   }, [userName]);
-
-  const filterAndSortPets = (petsData) => {
-    const { breed, size, gender } = filters;
-    let results = petsData;
-
-    if (breed.length > 0) {
-      results = results.filter((pet) => breed.includes(pet.breed));
-    }
-
-    if (size.length > 0) {
-      results = results.filter((pet) => size.includes(pet.size));
-    }
-
-    if (gender.length > 0) {
-      results = results.filter((pet) => gender.includes(pet.gender));
-    }
-
-    // Sort: push adopted pets to the end
-    results.sort((a, b) => (a.isAdopted ? 1 : -1));
-
-    setFilteredPets(results);
-  };
-
-  const handleFilterChange = (category, value) => {
-    setFilters((prevFilters) => {
-      const newFilters = { ...prevFilters };
-      if (newFilters[category].includes(value)) {
-        newFilters[category] = newFilters[category].filter(
-          (item) => item !== value
-        );
-      } else {
-        newFilters[category].push(value);
-      }
-      return newFilters;
-    });
-  };
 
   const handlePetClick = (pet) => {
     setSelectedPet(pet);
@@ -167,7 +123,6 @@ function Pets() {
       await axios.post(
         `http://localhost:3001/pet/${action}/${userName}/${petId}`
       );
-
       setLikedPets((prevLikedPets) => {
         const updatedLikes = new Set(prevLikedPets);
         if (updatedLikes.has(petId)) {
@@ -227,9 +182,9 @@ function Pets() {
                     src={`http://localhost:3001/${image}`}
                     alt={selectedPet.name}
                     style={{
-                      width: "100%",
-                      height: "400px",
-                      objectFit: "cover",
+                      width: "50%",
+                      height: "auto",
+                      objectFit: "contain",
                       borderRadius: "8px",
                     }}
                   />
@@ -255,6 +210,7 @@ function Pets() {
               >
                 {selectedPet.name}
               </Typography>
+              <Typography style={subtitle}>{selectedPet.type}</Typography>
               <Divider style={{ marginTop: "1rem", marginBottom: "1rem" }} />
               <Grid textAlign={"left"}>
                 <Typography variant="body1">
@@ -332,68 +288,13 @@ function Pets() {
         )}
       </Grid>
       <Typography style={subtitle}>
-        Click on the Pet's Image for more details
+        Click on the Pet's Image for more details.
+        <br /> Login as 'adopter' to view liked pets.
       </Typography>
       <Divider style={{ margin: "2rem 0" }} />
 
       {/* Filter Section */}
-      <Paper style={{ padding: "1rem", marginBottom: "2rem" }}>
-        <Typography style={title}>Filter Pets</Typography>
-        <Divider style={{ marginTop: "-1rem", marginBottom: "1rem" }} />
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <FormGroup>
-              <Typography style={{ fontWeight: "bold" }}>Breed</Typography>
-              {allBreeds.map((breed, index) => (
-                <FormControlLabel
-                  key={index}
-                  control={
-                    <Checkbox
-                      checked={filters.breed.includes(breed)}
-                      onChange={() => handleFilterChange("breed", breed)}
-                    />
-                  }
-                  label={breed}
-                />
-              ))}
-            </FormGroup>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <FormGroup>
-              <Typography style={{ fontWeight: "bold" }}>Size</Typography>
-              {allSizes.map((size, index) => (
-                <FormControlLabel
-                  key={index}
-                  control={
-                    <Checkbox
-                      checked={filters.size.includes(size)}
-                      onChange={() => handleFilterChange("size", size)}
-                    />
-                  }
-                  label={size}
-                />
-              ))}
-            </FormGroup>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <FormGroup>
-              <Typography style={{ fontWeight: "bold" }}>Gender</Typography>
-              {allGenders.map((gender, index) => (
-                <FormControlLabel
-                  key={index}
-                  control={
-                    <Checkbox
-                      checked={filters.gender.includes(gender)}
-                      onChange={() => handleFilterChange("gender", gender)}
-                    />
-                  }
-                  label={gender}
-                />
-              ))}
-            </FormGroup>
-          </Grid>
-        </Grid>
-      </Paper>
+      <FilterComponent onFilterChange={handleFilterChange} />
 
       {/* Pet Listings */}
       <Grid container spacing={2}>
@@ -445,6 +346,7 @@ function Pets() {
                 >
                   {pet.name}
                 </Typography>
+                <Typography style={subtitle}>{pet.type}</Typography>
                 <Divider style={{ marginTop: "1rem", marginBottom: "1rem" }} />
                 <Grid textAlign={"left"}>
                   <Typography variant="body1">

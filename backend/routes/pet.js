@@ -5,48 +5,52 @@ const router = express.Router();
 const upload = require('../config/multer');
 const transporter = require('../config/nodemailer');
 
-
-// Pet
+// Retrieve all pets
 router.get('/', async (req, res) => {
   try {
     const pets = await Pet.find();
     res.json(pets);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error fetching pets', error: error.message });
   }
 });
 
+// Retrieve a specific pet by ID
 router.get('/:id', async (req, res) => {
   try {
     const pet = await Pet.findById(req.params.id);
     if (!pet) return res.status(404).json({ message: 'Pet not found' });
     res.json(pet);
-  } catch (err) {
-    console.error('Error fetching pet:', err);
-    res.status(500).json({ message: 'Error fetching pet' });
+  } catch (error) {
+    console.error('Error fetching pet:', error);
+    res.status(500).json({ message: 'Error fetching pet', error: error.message });
   }
 });
 
+// Retrieve pets uploaded by a specific user
 router.get('/staff/:uploadedBy', async (req, res) => {
   const { uploadedBy } = req.params;
   try {
     const pets = await Pet.find({ uploadedBy });
     res.json(pets);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch pets' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch pets', error: error.message });
   }
 });
 
-router.post('/', upload.array('images'), async (req, res) => {
+// Add a new pet with multiple images
+router.post('/', upload.array('images', 10), async (req, res) => {
   try {
-    const { name, breed, size, age, gender, shelter, description, uploadedBy } = req.body;
+    const { name, type, breed, size, age, ageUnit, gender, shelter, description, uploadedBy } = req.body;
     
     // Create a new Pet document
     const newPet = new Pet({
       name,
+      type,
       breed,
       size,
       age,
+      ageUnit,
       gender,
       shelter,
       description,
@@ -57,19 +61,18 @@ router.post('/', upload.array('images'), async (req, res) => {
     // Save the new Pet document to the database
     await newPet.save();
     
-    // Send a success response
     res.status(201).json({ message: 'Pet added successfully!' });
-  } catch (err) {
-    // Handle any errors
-    console.error('Error adding pet:', err);
-    res.status(500).json({ message: 'Failed to add pet' });
+  } catch (error) {
+    console.error('Error adding pet:', error);
+    res.status(500).json({ message: 'Failed to add pet', error: error.message });
   }
 });
 
+// Update a pet's details and optionally its image
 router.put('/:petId', upload.single('image'), async (req, res) => {
   try {
     const petId = req.params.petId;
-    const { name, breed, age, gender, shelter, description } = req.body;
+    const { name, type, breed, age, ageUnit, gender, shelter, description } = req.body;
 
     // Find the pet by ID
     const pet = await Pet.findById(petId);
@@ -79,8 +82,10 @@ router.put('/:petId', upload.single('image'), async (req, res) => {
 
     // Update pet fields
     pet.name = name || pet.name;
+    pet.type = type || pet.type;
     pet.breed = breed || pet.breed;
     pet.age = age || pet.age;
+    pet.ageUnit = ageUnit || pet.ageUnit;
     pet.gender = gender || pet.gender;
     pet.shelter = shelter || pet.shelter;
     pet.description = description || pet.description;
@@ -96,40 +101,42 @@ router.put('/:petId', upload.single('image'), async (req, res) => {
     res.status(200).json({ message: 'Pet updated successfully', pet });
   } catch (error) {
     console.error('Error updating pet:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 });
 
-router.put("/adopt/:id", async (req, res) => {
+// Mark a pet as adopted or not adopted
+router.put('/adopt/:id', async (req, res) => {
   try {
     const pet = await Pet.findById(req.params.id);
 
     if (!pet) {
-      return res.status(404).json({ message: "Pet not found" });
+      return res.status(404).json({ message: 'Pet not found' });
     }
 
     pet.isAdopted = req.body.isAdopted;
 
     await pet.save();
 
-    res.status(200).json({ message: "Pet status updated", pet });
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(200).json({ message: 'Pet status updated', pet });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
 
+// Delete a pet by ID
 router.delete('/:id', async (req, res) => {
   try {
     const pet = await Pet.findByIdAndDelete(req.params.id);
     if (!pet) return res.status(404).json({ message: 'Pet not found' });
     res.status(200).json({ message: 'Pet deleted successfully' });
-  } catch (err) {
-    console.error("Error deleting pet listing:", err);
-    res.status(500).json({ message: 'Failed to delete pet listing' });
+  } catch (error) {
+    console.error('Error deleting pet listing:', error);
+    res.status(500).json({ message: 'Failed to delete pet listing', error: error.message });
   }
 });
 
-// Add a pet to user's liked pets
+// Add a pet to a user's liked pets
 router.post('/like/:name/:petId', async (req, res) => {
   try {
     const { name, petId } = req.params;
@@ -137,7 +144,7 @@ router.post('/like/:name/:petId', async (req, res) => {
     // Find the user by name
     const user = await User.findOne({ name });
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Add the pet ID to the user's likedPets array
@@ -146,12 +153,12 @@ router.post('/like/:name/:petId', async (req, res) => {
     });
 
     res.status(200).json({ message: 'Pet liked' });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to like pet' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to like pet', error: error.message });
   }
 });
 
-// Remove a pet from user's liked pets
+// Remove a pet from a user's liked pets
 router.post('/unlike/:name/:petId', async (req, res) => {
   try {
     const { name, petId } = req.params;
@@ -159,7 +166,7 @@ router.post('/unlike/:name/:petId', async (req, res) => {
     // Find the user by name
     const user = await User.findOne({ name });
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Remove the pet ID from the user's likedPets array
@@ -168,8 +175,8 @@ router.post('/unlike/:name/:petId', async (req, res) => {
     });
 
     res.status(200).json({ message: 'Pet unliked' });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to unlike pet' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to unlike pet', error: error.message });
   }
 });
 
@@ -181,15 +188,16 @@ router.get('/liked-pets/:name', async (req, res) => {
     // Find the user by name and populate likedPets
     const user = await User.findOne({ name }).populate('likedPets');
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     res.status(200).json(user.likedPets);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch liked pets' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch liked pets', error: error.message });
   }
 });
 
+// Handle an adoption request by sending an email
 router.post('/adopt/:petId', async (req, res) => {
   const { userName, userEmail, message } = req.body;
   const petId = req.params.petId;
@@ -198,15 +206,16 @@ router.post('/adopt/:petId', async (req, res) => {
     // Find the user by name
     const user = await User.findOne({ name: userName });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Find the pet by ID
     const pet = await Pet.findById(petId);
     if (!pet) {
-      return res.status(404).json({ message: "Pet not found" });
+      return res.status(404).json({ message: 'Pet not found' });
     }
 
+    // Setup email options
     const mailOptions = {
       from: userEmail,
       to: 'pawsweb.2024@gmail.com',
@@ -215,22 +224,25 @@ router.post('/adopt/:petId', async (req, res) => {
       text: `Hello,\n\n` +
             `I am interested in adopting the following pet:\n\n` +
             `Pet Name: ${pet.name}\n` +
+            `Type: ${pet.type}\n` +
             `Breed: ${pet.breed}\n` +
-            `Age: ${pet.age}\n\n` +
+            `Age: ${pet.age} ${pet.ageUnit}\n\n` +
             `Name: ${userName}\n` +
             `Email: ${userEmail}\n\n` +
             `Please get back to me with the next steps.\n\n` +
             `Thank you!`
     };
 
+    // Send the email
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Your message has been sent to the shelter. Please wait for further arrangements.' });
   } catch (error) {
     console.error('Error sending adoption request:', error);
-    res.status(500).json({ message: 'Failed to send adoption request. Please try again later.' });
+    res.status(500).json({ message: 'Failed to send adoption request. Please try again later.', error: error.message });
   }
 });
 
+// Get spotlight pets: most recent non-adopted pets
 router.get('/pets/spotlight', async (req, res) => {
   try {
     const pets = await Pet.find({ isAdopted: false })
@@ -239,8 +251,8 @@ router.get('/pets/spotlight', async (req, res) => {
 
     res.json(pets);
   } catch (error) {
-    console.error("Error fetching spotlight pets:", error); // Log the error details
-    res.status(500).send("Error fetching spotlight pets");
+    console.error('Error fetching spotlight pets:', error);
+    res.status(500).send('Error fetching spotlight pets');
   }
 });
 

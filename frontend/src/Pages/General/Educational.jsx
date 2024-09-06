@@ -77,7 +77,8 @@ function Educational() {
         Explore our Educational page to find essential tips and resources for
         pet care, behavior, and adoption. Whether you're preparing to welcome a
         new pet or looking to enhance your knowledge, you'll discover everything
-        you need to ensure a happy and healthy life for your furry friend.
+        you need to ensure a happy and healthy life for your furry friend. <br/><br/>
+        Click on the box to see the details of the educational topic.
       </Typography>
 
       {selectedTopic ? (
@@ -140,7 +141,7 @@ function Educational() {
                 <img
                   src={`http://localhost:3001/${topic.image}`}
                   alt={topic.title}
-                  style={{ maxWidth: "100%", margin: "10px 0" }}
+                  style={{ maxWidth: "50%", margin: "10px 0", borderRadius: "8px", }}
                 />
               </Grid>
             )}
@@ -150,26 +151,11 @@ function Educational() {
                 fontWeight: "bold",
                 overflowWrap: "break-word",
                 textTransform: "uppercase",
+                textAlign: "center"
               }}
             >
               {topic.topic}
             </Typography>
-            {topic.titles.map((q, index) => (
-              <div key={index} style={{ marginBottom: "1rem" }}>
-                <Typography
-                  variant="subtitle1"
-                  style={{ fontWeight: "bold", overflowWrap: "break-word" }}
-                >
-                  {q.title}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  style={{ overflowWrap: "break-word" }}
-                >
-                  {truncateContent(q.content, 300)}
-                </Typography>
-              </div>
-            ))}
           </Paper>
         ))
       )}

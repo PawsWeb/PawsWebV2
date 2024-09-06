@@ -91,7 +91,8 @@ function Faq() {
         solutions and understanding essential topics about pet care. Whether
         you're a seasoned pet parent or new to the world of pets, you'll find
         practical tips and advice to ensure your furry, feathered, or scaly
-        friends are happy and healthy!
+        friends are happy and healthy! <br/><br/>
+        Click on the down arrow to see the answer.
       </Typography>
       {faqs.length === 0 ? (
         <Typography variant="h6" align="center">

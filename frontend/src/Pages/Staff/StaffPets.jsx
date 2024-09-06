@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -10,65 +10,68 @@ import {
   Divider,
   IconButton,
   TextField,
+  MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { UserContext } from "../../App";
 
-function StaffPets({ userName }) {
-  const heading = { fontSize: "2.5rem", fontWeight: "600" };
-  const row = { display: "flex", marginTop: "1.5rem" };
-  const title = {
-    fontSize: "1.5rem",
-    fontWeight: "600",
-    textTransform: "uppercase",
-    margin: "20px 0",
-  };
-  const petName = {
-    fontSize: "1.5rem",
-    fontWeight: "600",
-    textTransform: "uppercase",
-  };
-  const breedName = {
-    fontSize: "1.2rem",
-    fontWeight: "100",
-    color: "grey",
-  };
-  const editDltBtn = {
-    color: "#574e44",
-    marginRight: "10px",
-  };
-  const buttonStyle = {
-    fontSize: "1rem",
-    fontWeight: "700",
-    backgroundColor: "#b99976",
-    borderRadius: "0.5rem",
-    marginRight: "10px",
+function StaffPets() {
+  // Styles for various elements
+  const styles = {
+    heading: { fontSize: "2.5rem", fontWeight: "600" },
+    row: { display: "flex", marginTop: "1.5rem" },
+    title: {
+      fontSize: "1.5rem",
+      fontWeight: "600",
+      textTransform: "uppercase",
+      margin: "20px 0",
+    },
+    petName: {
+      fontSize: "1.5rem",
+      fontWeight: "600",
+      textTransform: "uppercase",
+    },
+    typeName: {
+      fontSize: "1.2rem",
+      fontWeight: "100",
+      color: "grey",
+    },
+    editDltBtn: {
+      color: "#574e44",
+      marginRight: "10px",
+    },
+    buttonStyle: {
+      fontSize: "1rem",
+      fontWeight: "700",
+      backgroundColor: "#b99976",
+      borderRadius: "0.5rem",
+      marginRight: "10px",
+    },
+    addBtn: {
+      fontSize: "1rem",
+      fontWeight: "700",
+      backgroundColor: "#987554",
+      borderRadius: "0.5rem",
+      margin: "20px 0",
+    },
+    adoptBtn: {
+      fontSize: "0.8rem",
+      fontWeight: "600",
+      backgroundColor: "#453a2f",
+      borderRadius: "0.5rem",
+      margin: "20px 10px",
+    },
+    saveBtn: {
+      fontSize: "1rem",
+      fontWeight: "600",
+      backgroundColor: "#453a2f",
+      borderRadius: "0.5rem",
+    },
   };
 
-  const addBtn = {
-    fontSize: "1rem",
-    fontWeight: "700",
-    backgroundColor: "#987554",
-    borderRadius: "0.5rem",
-    margin: "20px 0",
-  };
-
-  const adoptBtn = {
-    fontSize: "0.8rem",
-    fontWeight: "600",
-    backgroundColor: "#453a2f",
-    borderRadius: "0.5rem",
-    margin: "20px 10px",
-  };
-
-  const saveBtn = {
-    fontSize: "1rem",
-    fontWeight: "600",
-    backgroundColor: "#453a2f",
-    borderRadius: "0.5rem",
-  };
-
+  // State variables
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -78,7 +81,9 @@ function StaffPets({ userName }) {
   const [imagePreview, setImagePreview] = useState("");
 
   const navigate = useNavigate();
+  const { userName } = useContext(UserContext);
 
+  // Fetch pets from the server
   const fetchPets = async () => {
     if (userName) {
       try {
@@ -96,19 +101,23 @@ function StaffPets({ userName }) {
     }
   };
 
+  // Fetch pets when the component mounts or userName changes
   useEffect(() => {
     fetchPets();
   }, [userName]);
 
+  // Handle pet editing
   const handleEditPet = (pet) => {
     setEditingPet(pet._id);
     setEditFormData({ ...pet });
   };
 
+  // Handle changes in edit form
   const handleEditChange = (e) => {
     setEditFormData({ ...editFormData, [e.target.name]: e.target.value });
   };
 
+  // Handle image file selection
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -121,6 +130,7 @@ function StaffPets({ userName }) {
     }
   };
 
+  // Save the edited pet details
   const handleSaveEdit = (petId) => {
     const formData = new FormData();
 
@@ -156,6 +166,7 @@ function StaffPets({ userName }) {
       });
   };
 
+  // Delete a pet
   const handleDeletePet = (petId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this pet?"
@@ -175,10 +186,12 @@ function StaffPets({ userName }) {
     }
   };
 
+  // Navigate to add pet page
   const handleAddPet = () => {
     navigate("/add-pet");
   };
 
+  // Mark a pet as adopted
   const handleAdoptPet = (petId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to mark this pet as adopted?"
@@ -201,61 +214,104 @@ function StaffPets({ userName }) {
     }
   };
 
+  const handleNotAdoptPet = (petId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to mark this pet available for adoption?"
+    );
+
+    if (isConfirmed) {
+      axios
+        .put(`http://localhost:3001/pet/adopt/${petId}`, { isAdopted: false })
+        .then(() => {
+          setPets(
+            pets.map((pet) =>
+              pet._id === petId ? { ...pet, isAdopted: false } : pet
+            )
+          );
+        })
+        .catch((err) => {
+          console.error("Failed to mark pet available for adoption:", err);
+          setError(
+            "Failed to mark pet as available for adoption. Please try again."
+          );
+        });
+    }
+  };
+
+  // Truncate pet description to a certain length
   const truncateContent = (content, charLimit) => {
     if (content.length <= charLimit) return content;
     return content.slice(0, charLimit) + "...";
   };
 
+  // Separate pets into adopted and available
   const adoptedPets = pets.filter((pet) => pet.isAdopted);
   const availablePets = pets.filter((pet) => !pet.isAdopted);
 
   return (
     <Container style={{ paddingTop: "5rem", width: "80%" }}>
+      {/* Header and Add Pet Button */}
       <Grid container alignItems="center" justifyContent="space-between">
-        <Typography style={heading}>Your Pets</Typography>
+        <Typography style={styles.heading}>Your Pets</Typography>
         <Link to="/pets" style={{ textDecoration: "none" }}>
-          <Button variant="contained" style={buttonStyle}>
+          <Button variant="contained" style={styles.buttonStyle}>
             View
           </Button>
         </Link>
       </Grid>
       <Divider style={{ margin: "1rem 0" }} />
-
+      <Button
+        variant="contained"
+        style={styles.addBtn}
+        onClick={handleAddPet}
+        startIcon={<AddIcon />}
+      >
+        Add Pet
+      </Button>
       {error && <Typography color="error">{error}</Typography>}
       {availablePets.length === 0 && adoptedPets.length === 0 ? (
         <Typography>No pets uploaded yet.</Typography>
       ) : (
         <>
+          {/* Available Pets Section */}
           <Grid container alignItems="center" justifyContent="space-between">
-            <Typography style={title}>Available Pets</Typography>
-            <Button
-              variant="contained"
-              style={addBtn}
-              onClick={handleAddPet}
-              startIcon={<AddIcon />}
-            >
-              Add Pet
-            </Button>
+            <Typography style={styles.title}>Available Pets</Typography>
           </Grid>
           <Grid container spacing={2}>
             {availablePets.map((pet) => (
-              <Grid item xs={12} md={6} key={pet._id}>
-                <Paper style={{ padding: "1rem", marginBottom: "1rem" }}>
+              <Grid item xs={12} md={6} lg={4} key={pet._id}>
+                <Paper
+                  style={{
+                    padding: "1rem",
+                    marginBottom: "1rem",
+                    height: "650px",
+                    overflow: "auto",
+                  }}
+                >
                   {pet.images && pet.images.length > 0 && (
-                    <div style={{ marginBottom: "1rem" }}>
+                    <Grid
+                      container
+                      justifyContent="center"
+                      style={{ marginBottom: "1rem" }}
+                    >
                       {pet.images.map((image, index) => (
                         <img
                           key={index}
                           src={`http://localhost:3001/${image}`}
                           alt={`${pet.name} ${index}`}
-                          style={{ maxWidth: "100%", objectFit: "cover" }}
+                          style={{
+                            maxWidth: "100%",
+                            objectFit: "cover",
+                            height: "300px",
+                          }}
                         />
                       ))}
-                    </div>
+                    </Grid>
                   )}
                   {editingPet === pet._id ? (
+                    // Edit Form
                     <Grid>
-                      <Grid style={row}>
+                      <Grid style={styles.row}>
                         <TextField
                           fullWidth
                           label="Name"
@@ -266,13 +322,22 @@ function StaffPets({ userName }) {
                         />
                         <TextField
                           fullWidth
+                          label="Type"
+                          name="type"
+                          value={editFormData.type || ""}
+                          onChange={handleEditChange}
+                        />
+                      </Grid>
+                      <Grid style={styles.row}>
+                        <TextField
+                          fullWidth
                           label="Breed"
                           name="breed"
                           value={editFormData.breed || ""}
                           onChange={handleEditChange}
                         />
                       </Grid>
-                      <Grid style={row}>
+                      <Grid style={styles.row}>
                         <TextField
                           fullWidth
                           label="Age"
@@ -284,13 +349,31 @@ function StaffPets({ userName }) {
                         />
                         <TextField
                           fullWidth
+                          select
+                          label="Age Unit"
+                          name="ageUnit"
+                          style={{ marginRight: "20px" }}
+                          type="number"
+                          value={editFormData.ageUnit || ""}
+                          onChange={handleEditChange}
+                        >
+                          <MenuItem value="Week(s)">Week(s)</MenuItem>
+                          <MenuItem value="Month(s)">Month(s)</MenuItem>
+                          <MenuItem value="Year(s)">Year(s)</MenuItem>
+                        </TextField>
+                        <TextField
+                          fullWidth
+                          select
                           label="Gender"
                           name="gender"
                           value={editFormData.gender || ""}
                           onChange={handleEditChange}
-                        />
+                        >
+                          <MenuItem value="Male">Male</MenuItem>
+                          <MenuItem value="Female">Female</MenuItem>
+                        </TextField>
                       </Grid>
-                      <Grid style={row}>
+                      <Grid style={styles.row}>
                         <TextField
                           fullWidth
                           label="Shelter"
@@ -299,7 +382,7 @@ function StaffPets({ userName }) {
                           onChange={handleEditChange}
                         />
                       </Grid>
-                      <Grid style={row}>
+                      <Grid style={styles.row}>
                         <TextField
                           fullWidth
                           multiline
@@ -310,7 +393,7 @@ function StaffPets({ userName }) {
                           onChange={handleEditChange}
                         />
                       </Grid>
-                      <Grid style={row}>
+                      <Grid style={styles.row}>
                         {imagePreview && (
                           <img
                             src={imagePreview}
@@ -319,10 +402,10 @@ function StaffPets({ userName }) {
                           />
                         )}
                       </Grid>
-                      <Grid style={row}>
+                      <Grid style={styles.row}>
                         <Button
                           variant="contained"
-                          style={addBtn}
+                          style={styles.addBtn}
                           component="label"
                         >
                           {image ? "Change Image" : "Upload Image"}
@@ -333,11 +416,11 @@ function StaffPets({ userName }) {
                           />
                         </Button>
                       </Grid>
-                      <Grid style={row}>
+                      <Grid style={styles.row}>
                         <Button
                           variant="contained"
                           color="primary"
-                          style={saveBtn}
+                          style={styles.saveBtn}
                           onClick={() => handleSaveEdit(pet._id)}
                         >
                           Save
@@ -345,11 +428,17 @@ function StaffPets({ userName }) {
                       </Grid>
                     </Grid>
                   ) : (
+                    // Pet Details
                     <>
-                      <Typography style={petName}>{pet.name}</Typography>
-                      <Typography style={breedName}>{pet.breed}</Typography>
+                      <Typography style={styles.petName}>{pet.name}</Typography>
+                      <Typography style={styles.typeName}>
+                        {pet.type}
+                      </Typography>
                       <Typography variant="subtitle1">
-                        <strong>Age: </strong> {pet.age}
+                        <strong>Breed: </strong> {pet.breed}
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        <strong>Age: </strong> {pet.age} {pet.ageUnit}
                       </Typography>
                       <Typography variant="subtitle1">
                         <strong>Gender: </strong> {pet.gender}
@@ -366,7 +455,7 @@ function StaffPets({ userName }) {
                         <Grid item>
                           <IconButton
                             variant="contained"
-                            style={editDltBtn}
+                            style={styles.editDltBtn}
                             onClick={() => handleEditPet(pet)}
                           >
                             <EditIcon />
@@ -374,7 +463,7 @@ function StaffPets({ userName }) {
 
                           <IconButton
                             variant="contained"
-                            style={editDltBtn}
+                            style={styles.editDltBtn}
                             onClick={() => handleDeletePet(pet._id)}
                           >
                             <DeleteIcon />
@@ -383,7 +472,7 @@ function StaffPets({ userName }) {
                         <Grid item>
                           <Button
                             variant="contained"
-                            style={adoptBtn}
+                            style={styles.adoptBtn}
                             onClick={() => handleAdoptPet(pet._id)}
                           >
                             Adopted
@@ -399,27 +488,48 @@ function StaffPets({ userName }) {
           <Divider style={{ margin: "2rem 0" }} />
           {adoptedPets.length > 0 && (
             <>
-              <Typography style={title}>Adopted Pets</Typography>
+              {/* Adopted Pets Section */}
+              <Typography style={styles.title}>Adopted Pets</Typography>
               <Grid container spacing={2}>
                 {adoptedPets.map((pet) => (
-                  <Grid item xs={12} md={6} key={pet._id}>
-                    <Paper style={{ padding: "1rem", marginBottom: "1rem" }}>
+                  <Grid item xs={12} md={6} lg={4} key={pet._id}>
+                    <Paper
+                      style={{
+                        padding: "1rem",
+                        marginBottom: "1rem",
+                        height: "650px",
+                        overflow: "auto",
+                      }}
+                    >
                       {pet.images && pet.images.length > 0 && (
-                        <div style={{ marginBottom: "1rem" }}>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          style={{ marginBottom: "1rem" }}
+                        >
                           {pet.images.map((image, index) => (
                             <img
                               key={index}
                               src={`http://localhost:3001/${image}`}
                               alt={`${pet.name} ${index}`}
-                              style={{ maxWidth: "100%", objectFit: "cover" }}
+                              style={{
+                                maxWidth: "100%",
+                                objectFit: "cover",
+                                height: "300px",
+                              }}
                             />
                           ))}
-                        </div>
+                        </Grid>
                       )}
-                      <Typography style={title}>{pet.name}</Typography>
-                      <Typography style={breedName}>{pet.breed}</Typography>
+                      <Typography style={styles.title}>{pet.name}</Typography>
+                      <Typography style={styles.typeName}>
+                        {pet.type}
+                      </Typography>
                       <Typography variant="subtitle1">
-                        <strong>Age: </strong> {pet.age}
+                        <strong>Breed: </strong> {pet.breed}
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        <strong>Age: </strong> {pet.age} {pet.ageUnit}
                       </Typography>
                       <Typography variant="subtitle1">
                         <strong>Gender: </strong> {pet.gender}
@@ -428,6 +538,30 @@ function StaffPets({ userName }) {
                         <strong>Description: </strong>
                         {truncateContent(pet.description, 150)}
                       </Typography>
+                      <Grid
+                        container
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <Grid item>
+                          <IconButton
+                            variant="contained"
+                            style={styles.editDltBtn}
+                            onClick={() => handleDeletePet(pet._id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            style={styles.adoptBtn}
+                            onClick={() => handleNotAdoptPet(pet._id)}
+                          >
+                            Not Adopted
+                          </Button>
+                        </Grid>
+                      </Grid>
                     </Paper>
                   </Grid>
                 ))}

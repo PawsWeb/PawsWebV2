@@ -27,6 +27,7 @@ const AddPet = () => {
   const { userName } = useContext(UserContext);
   const [formData, setFormData] = useState({
     name: "",
+    type: "",
     breed: "",
     size: "",
     age: "",
@@ -91,9 +92,11 @@ const AddPet = () => {
         setOpenSnackbar(true);
         setFormData({
           name: "",
+          type: "",
           breed: "",
           size: "",
           age: "",
+          ageUnit: "",
           gender: "",
           shelter: "",
           description: "",
@@ -158,9 +161,9 @@ const AddPet = () => {
               <TextField
                 fullWidth
                 select
-                label="Breed"
-                name="breed"
-                value={formData.breed}
+                label="Type"
+                name="type"
+                value={formData.type}
                 onChange={handleChange}
                 required
               >
@@ -170,6 +173,16 @@ const AddPet = () => {
               <MenuItem value="Hamster">Hamster</MenuItem>
               <MenuItem value="Others">Others</MenuItem>
               </TextField>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Breed"
+                name="breed"
+                value={formData.breed}
+                onChange={handleChange}
+                required
+              />
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField
@@ -186,7 +199,7 @@ const AddPet = () => {
                 <MenuItem value="Large">Large</MenuItem>
               </TextField>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={6} md={3}>
               <TextField
                 fullWidth
                 type="number"
@@ -196,6 +209,21 @@ const AddPet = () => {
                 onChange={handleChange}
                 required
               />
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <TextField
+                fullWidth
+                select
+                label="Age Unit"
+                name="ageUnit"
+                value={formData.ageUnit}
+                onChange={handleChange}
+                required
+              >
+                <MenuItem value="Week(s)">Week(s)</MenuItem>
+                <MenuItem value="Month(s)">Month(s)</MenuItem>
+                <MenuItem value="Year(s)">Year(s)</MenuItem>
+              </TextField>
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField
@@ -226,7 +254,7 @@ const AddPet = () => {
                 fullWidth
                 multiline
                 rows={4}
-                label="Description"
+                label="Description (including backstory, personality, health status, and more of the pet)"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}

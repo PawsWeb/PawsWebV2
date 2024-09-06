@@ -10,13 +10,28 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 function PetEditor() {
-    const dltBtn = {
-        color: "#574e44",
-        marginRight: "10px",
-      };
+  const heading = { fontSize: "2.5rem", fontWeight: "600" };
+  const subtitle = {
+    color: "grey",
+    fontSize: "0.9rem",
+    fontWeight: "100",
+    marginTop: "10px",
+    marginBottom: "40px",
+  };
+  const dltBtn = {
+    color: "#574e44",
+    marginRight: "10px",
+  };
+  const buttonStyle = {
+    fontSize: "1rem",
+    fontWeight: "700",
+    backgroundColor: "#b99976",
+    borderRadius: "0.5rem",
+  };
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,10 +53,11 @@ function PetEditor() {
     return content.slice(0, charLimit) + "...";
   };
 
-
   const handleAdoptClick = async (petId, currentStatus) => {
     try {
-      await axios.put(`http://localhost:3001/pet/adopt/${petId}`, { isAdopted: !currentStatus });
+      await axios.put(`http://localhost:3001/pet/adopt/${petId}`, {
+        isAdopted: !currentStatus,
+      });
       fetchPets(); // Refresh the pet list after status update
     } catch (err) {
       console.error("Error updating pet status:", err);
@@ -50,8 +66,10 @@ function PetEditor() {
 
   const handleDeleteClick = async (petId) => {
     // Show confirmation prompt
-    const isConfirmed = window.confirm("Are you sure you want to delete this pet?");
-    
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this pet?"
+    );
+
     if (isConfirmed) {
       try {
         await axios.delete(`http://localhost:3001/pet/${petId}`);
@@ -87,8 +105,22 @@ function PetEditor() {
 
   return (
     <Container style={{ paddingTop: "5rem", width: "80%" }}>
-      <Typography variant="h4" style={{ fontWeight: "600", marginBottom: "2rem" }}>
-        Pet Dashboard
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="space-between"
+        style={{ marginBottom: "30px" }}
+      >
+        <Typography style={heading}>Pet Dashboard</Typography>
+        <Link to="/pets" style={{ textDecoration: "none" }}>
+          <Button variant="contained" style={buttonStyle}>
+            View
+          </Button>
+        </Link>
+      </Grid>
+      <Typography style={subtitle}>
+        As an admin, <br />you have the ability to remove inappropriate pet listings,
+        <br /> update the adoption status of any pet.
       </Typography>
       <Divider style={{ marginBottom: "2rem" }} />
       <Grid container spacing={2}>
@@ -133,46 +165,54 @@ function PetEditor() {
                   Adopted
                 </Typography>
               )}
-              <Typography variant="h6" style={{ fontWeight: "bold", textTransform: "uppercase" }}>
+              <Typography
+                variant="h6"
+                style={{ fontWeight: "bold", textTransform: "uppercase" }}
+              >
                 {pet.name}
               </Typography>
               <Divider style={{ marginTop: "1rem", marginBottom: "1rem" }} />
               <Grid textAlign={"left"}>
-              <Typography variant="body1">
-                <strong>Breed:</strong> {pet.breed}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Size:</strong> {pet.size}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Age:</strong> {pet.age}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Gender:</strong> {pet.gender}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Shelter:</strong> {pet.shelter}
-              </Typography>
-              <Typography variant="body1">
-                <strong>Description:</strong> {truncateContent(pet.description, 150)}
-              </Typography></Grid>
+                <Typography variant="body1">
+                  <strong>Breed:</strong> {pet.breed}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Size:</strong> {pet.size}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Age:</strong> {pet.age}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Gender:</strong> {pet.gender}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Shelter:</strong> {pet.shelter}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Description:</strong>{" "}
+                  {truncateContent(pet.description, 150)}
+                </Typography>
+              </Grid>
               <Grid marginTop={"10px"}>
-              <Button
-                onClick={() => handleAdoptClick(pet._id, pet.isAdopted)}
-                style={{
-                  fontSize: "0.9rem",
-                  fontWeight: "700",
-                  backgroundColor: "#453a2f",
-                  borderRadius: "0.5rem",
-                  color: "white",
-                  margin: "10px",
-                }}
-              >
-                {pet.isAdopted ? "Not Adopted" : "Adopted"}
-              </Button>
-              <IconButton style={dltBtn} onClick={() => handleDeleteClick(pet._id)}>
-                <DeleteIcon />
-              </IconButton>
+                <Button
+                  onClick={() => handleAdoptClick(pet._id, pet.isAdopted)}
+                  style={{
+                    fontSize: "0.9rem",
+                    fontWeight: "700",
+                    backgroundColor: "#453a2f",
+                    borderRadius: "0.5rem",
+                    color: "white",
+                    margin: "10px",
+                  }}
+                >
+                  {pet.isAdopted ? "Not Adopted" : "Adopted"}
+                </Button>
+                <IconButton
+                  style={dltBtn}
+                  onClick={() => handleDeleteClick(pet._id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
               </Grid>
             </Paper>
           </Grid>

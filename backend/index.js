@@ -12,6 +12,8 @@ const volunteerRoutes = require('./routes/volunteer');
 const petRoutes = require('./routes/pet');
 const faqRoutes = require('./routes/faq');
 const educationalRoutes = require('./routes/educational');
+const filterRoutes = require('./routes/filter');
+
 
 dotenv.config();
 
@@ -34,6 +36,7 @@ app.use('/volunteer', volunteerRoutes);
 app.use('/pet', petRoutes);
 app.use('/faq', faqRoutes);
 app.use('/educational', educationalRoutes);
+app.use('/filter', filterRoutes);
 
 
 app.listen(process.env.PORT || 3001, () => {

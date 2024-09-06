@@ -125,11 +125,13 @@ function StaffNavbar({ userName }) {
             alignItems: "center",
           }}
         >
-          <img
-            src={logo}
-            alt="PawsWeb Logo"
-            style={{ marginTop: "5px", width: "150px" }}
-          />
+          <Link to="/">
+            <img
+              src={logo}
+              alt="PawsWeb Logo"
+              style={{ marginTop: "5px", width: "150px" }}
+            />
+          </Link>
 
           {!isSmallScreen && (
             <Box
