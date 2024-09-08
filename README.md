@@ -14,7 +14,7 @@ Pet Management (for Shelter users): http://localhost:3000/shelter/pet-management
 
 ***Shelter ACCOUNT:*** 
 username : bob_shelter    
-password : ppassword123
+password : password123
 
 ***Admin ACCOUNT:*** 
 username: wanni    
