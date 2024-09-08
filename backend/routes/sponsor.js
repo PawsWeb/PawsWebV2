@@ -2,6 +2,7 @@ const express = require('express');
 const transporter = require('../config/nodemailer');
 const router = express.Router();
 
+// Sponsor
 router.post('/', async (req, res) => {
   const { name, email, phone, message } = req.body;
 
@@ -24,7 +25,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).json({ message: 'Your message has been sent successfully!' });
   } catch (error) {
-    console.error('Contact form error:', error);
+    console.error('Sponsorship form error:', error);
     res.status(500).json({ error: 'Failed to send your message. Please try again later.' });
   }
 });

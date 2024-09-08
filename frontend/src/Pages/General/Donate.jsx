@@ -107,7 +107,7 @@ function Donate() {
         </Button>
       </form>
       {success && (
-        <Typography variant="body" color="green">
+        <Typography variant="body1" color="green">
           Thank you for your donation!
         </Typography>
       )}
