@@ -29,11 +29,6 @@ function Educational() {
     borderRadius: "0.5rem",
   };
 
-  const truncateContent = (content, charLimit) => {
-    if (content.length <= charLimit) return content;
-    return content.slice(0, charLimit) + "...";
-  };
-
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const { userRole } = useContext(UserContext); // Use context to get user role

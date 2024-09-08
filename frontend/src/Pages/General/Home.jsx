@@ -1,6 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../App";
 import axios from "axios";
 import {
   Button,
@@ -14,7 +13,6 @@ import adoptMe from "../../assets/images/adoptMe.png";
 import aboutUsImg from "../../assets/images/banner.png";
 
 function Home() {
-  const { userRole } = useContext(UserContext);
   const [spotlightPets, setSpotlightPets] = useState([]);
   const navigate = useNavigate();
 
@@ -61,7 +59,6 @@ function Home() {
   };
 
   // Handlers
-  const handleHomepageEditor = () => navigate("/admin/home");
   const handlePetsPage = () => navigate("/pets");
   const handleVolunteer = () => navigate("/volunteer");
   const handleDonate = () => navigate("/donate");
@@ -86,7 +83,6 @@ function Home() {
 
   return (
     <Container style={{ paddingTop: "5rem", width: "80%" }}>
-
       {/* Hero Section */}
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item xs={12} md={6}>
