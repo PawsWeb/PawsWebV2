@@ -8,8 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     name TEXT NOT NULL,
     email TEXT UNIQUE,
-    role TEXT NOT NULL CHECK(role IN ('shelter', 'foster_home', 'adopter')),
-    -- user_type TEXT NOT NULL,
+    role TEXT NOT NULL CHECK(role IN ('admin', 'shelter', 'user')),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -20,14 +19,11 @@ CREATE TABLE IF NOT EXISTS animals (
     size TEXT NOT NULL,
     age INTEGER NOT NULL,
     gender TEXT NOT NULL,
-    shelter TEXT NOT NULL,
+    shelter_id INTEGER NOT NULL,
     description TEXT,
     image_url TEXT,
-    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS chat (
-    id INTEGER PRIMARY KEY AUTOINCREMENT
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (shelter_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS conversations (
@@ -37,7 +33,7 @@ CREATE TABLE IF NOT EXISTS conversations (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user1_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (user2_id) REFERENCES users(id) ON DELETE CASCADE,
-    UNIQUE(user1_id, user2_id) -- Ensures each pair of users only has one conversation
+    UNIQUE(user1_id, user2_id)
 );
 
 CREATE TABLE IF NOT EXISTS messages (
@@ -69,24 +65,31 @@ CREATE TABLE IF NOT EXISTS comments (
     FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS donation_requests (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    requester_name TEXT NOT NULL,
-    requester_email TEXT NOT NULL,
-    requester_phone TEXT,
-    request_type TEXT NOT NULL, -- e.g., "Donation" or "Sponsorship"
-    message TEXT,
-    organization TEXT NOT NULL, -- The name of the organization being donated to
-    status TEXT DEFAULT 'Pending', -- e.g., "Pending", "Reviewed", "Completed"
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS faqs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     question TEXT NOT NULL,
     answer TEXT NOT NULL,
-    category TEXT, -- Optional: e.g., "Health", "Training", "Nutrition"
+    category TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-COMMIT; 
+CREATE TABLE IF NOT EXISTS shelters (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    contact_info TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS meeting_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    animal_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    contact_number TEXT NOT NULL,
+    requested_date DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE
+);
+
+COMMIT;

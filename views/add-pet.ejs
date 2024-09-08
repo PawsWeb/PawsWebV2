@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a Pet | PawsWeb</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: Arial, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #453a2f;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-buttons button {
+            background-color: #ffffff;
+            color: #453a2f;
+            font-size: 18px;
+            letter-spacing: 1px;
+            border: none;
+            padding: 0px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            border-radius: 0px;
+        }
+
+        .nav-buttons button:hover {
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #453a2fc7;
+            border-bottom: 2px solid #453a2fc7;
+        }
+
+        .login-button {
+            background-color: #453a2f;
+            color: #ffffff;
+            font-size: 18px;
+            border: 2px solid #ffffff;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .login-button:hover {
+            background-color: #ffffff;
+            color: #453a2f;
+            border: 2px solid #453a2f;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .manage-requests-button {
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 16px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: block;
+        }
+
+        .manage-requests-button:hover {
+            background-color: #0056b3;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .submit-button {
+            background-color: #453a2f;
+            color: #ffffff;
+            font-size: 18px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background-color: #333;
+        }
+
+        footer {
+            background-color: #453a2f;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/"><img src="/images/logo.png" alt="PawsWeb Logo" class="logo"></a>
+        <nav class="nav-buttons">
+            <a href="/"><button>HOME</button></a>
+            <a href="aboutus"><button>ABOUT US</button></a>
+            <a href="ourpets"><button>OUR PETS</button></a>
+            <a href="educational"><button>EDUCATIONAL</button></a>
+            <a href="faq"><button>FAQ</button></a>
+        </nav>
+        <a href="login"><button class="login-button">LOGIN</button></a>
+    </header>
+
+    <main>
+        <a href="/shelter/meeting-requests" class="manage-requests-button">Manage Meeting Requests</a>
+        
+        <h2>Add a New Pet</h2>
+        <form action="/shelter/add-pet" method="POST">
+            <input type="hidden" name="shelter_id" value="<%= shelter_id %>"> 
+            <label for="name">Pet Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="breed">Breed:</label>
+            <input type="text" id="breed" name="breed" required>
+
+            <label for="size">Size:</label>
+            <select id="size" name="size" required>
+                <option value="Small">Small</option>
+                <option value="Medium">Medium</option>
+                <option value="Large">Large</option>
+            </select>
+
+            <label for="age">Age (in years):</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+
+            <label for="image_url">Image URL:</label>
+            <input type="text" id="image_url" name="image_url" required>
+
+            <button type="submit" class="submit-button">Add Pet</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PawsWeb. All rights reserved.</p>
+    </footer>
+</body>
+</html>

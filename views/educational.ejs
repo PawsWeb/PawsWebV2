@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational | PawsWeb</title>
+    <link rel="icon" type="image/png" href="/images/pawsweb-icon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .articles-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .article-card {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 30%;
+            text-align: left;
+        }
+
+        .article-card h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .article-card p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/"><img src="/images/logo.png" alt="PawsWeb Logo" class="logo"></a>
+        <nav class="nav-buttons">
+            <a href="/"><button>HOME</button></a>
+            <a href="aboutus"><button>ABOUT US</button></a>
+            <a href="ourpets"><button>OUR PETS</button></a>
+            <a href="educational"><button>EDUCATIONAL</button></a>
+            <a href="faq"><button>FAQ</button></a>
+        </nav>
+        <a href="login"><button class="login-button">LOGIN</button></a>
+    </header>
+
+    <hr class="line">
+
+    <main>
+        <section class="educational-container">
+            <h1 class="title">Educational Resources for Pet Adoption</h1>
+            <hr class="line">
+            
+            <div class="articles-grid">
+                <% posts.forEach(post => { %>
+                    <div class="article-card">
+                        <h2><%= post.title %></h2>
+                        <p><%= post.content %></p>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PawsWeb. All rights reserved.</p>
+    </footer>
+</body>
+</html>

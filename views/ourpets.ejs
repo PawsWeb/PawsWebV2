@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Pets | PawsWeb</title>
+    <link rel="icon" type="image/png" href="/images/pawsweb-icon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: Arial, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #453a2f;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-buttons button {
+            background-color: #ffffff;
+            color: #453a2f;
+            font-size: 18px;
+            letter-spacing: 1px;
+            border: none;
+            padding: 0px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            border-radius: 0px;
+        }
+
+        .nav-buttons button:hover {
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #453a2fc7;
+            border-bottom: 2px solid #453a2fc7;
+        }
+
+        .login-button {
+            background-color: #453a2f;
+            color: #ffffff;
+            font-size: 18px;
+            border: 2px solid #ffffff;
+            padding: 5px 15px;
+            margin: 0px 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .login-button:hover {
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #453a2f;
+            border: 2px solid #453a2f;
+        }
+
+        hr.line {
+            border: none;
+            height: 2px;
+            background-color: #453a2f;
+            margin-top: 0;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .search-bar button {
+            background-color: #453a2f;
+            color: #ffffff;
+            font-size: 16px;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .pet-profiles {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .pet-profile {
+            text-align: center;
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            margin-bottom: 20px;
+        }
+
+        .pet-profile img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .pet-profile h3 {
+            margin-top: 15px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .pet-profile p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .schedule-meeting-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .schedule-meeting-btn:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            background-color: #453a2f;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/"><img src="/images/logo.png" alt="PawsWeb Logo" class="logo"></a>
+        <nav class="nav-buttons">
+            <a href="/"><button>HOME</button></a>
+            <a href="aboutus"><button>ABOUT US</button></a>
+            <a href="ourpets"><button>OUR PETS</button></a>
+            <a href="educational"><button>EDUCATIONAL</button></a>
+            <a href="faq"><button>FAQ</button></a>
+        </nav>
+        <a href="login"><button class="login-button">LOGIN</button></a>
+    </header>
+
+    <hr class="line">
+
+    <main>
+        <h2>Browse Pet Profiles</h2>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <form action="/ourpets" method="GET" style="display: flex;">
+                <input type="text" name="search" placeholder="Search animals" value="<%= search %>" style="flex-grow: 1;">
+                <button type="submit" style="margin-left: 20px;">Search</button>
+            </form>
+        </div>
+
+        <!-- Pet Profiles -->
+        <div class="pet-profiles">
+            <% animals.forEach(animal => { %>
+            <div class="pet-profile">
+                <img src="<%= animal.image_url %>" alt="<%= animal.name %>">
+                <h3><%= animal.name %></h3>
+                <p>
+                    Breed: <%= animal.breed %><br>
+                    Age: <%= animal.age %> years<br>
+                    Size: <%= animal.size %><br>
+                    Gender: <%= animal.gender %><br>
+                    Health Status: <%= animal.description %><br>
+                    Shelter ID: <%= animal.shelter_id %><br>
+                    Date Added: <%= new Date(animal.date_added).toLocaleDateString() %><br>
+                </p>
+                <a href="/schedule-meeting?animalId=<%= animal.id %>">
+                    <button class="schedule-meeting-btn">Schedule Virtual meet-and-greet</button>
+                </a>
+            </div>
+            <% }) %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PawsWeb. All rights reserved.</p>
+    </footer>
+</body>
+</html>

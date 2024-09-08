@@ -5,29 +5,289 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawsWeb</title>
     <link rel="icon" type="image/png" href="/images/pawsweb-icon.png">
-    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-button {
+            background-color: transparent;
+            color: #453a2f;
+            font-size: 18px;
+            letter-spacing: 1px;
+            border: none;
+            padding: 0px;
+            cursor: pointer;
+            transition: color 0.3s, border-bottom 0.3s;
+            border-bottom: 2px solid transparent;
+            border-radius: 0px;
+        }
+
+        .nav-button:hover {
+            font-weight: bold;
+            color: #ff7043;
+            border-bottom: 2px solid #ff7043;
+        }
+
+        .login-button {
+            background-color: #ff7043;
+            color: #ffffff;
+            font-size: 18px;
+            border: 2px solid transparent;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .login-button:hover {
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #ff7043;
+            border: 2px solid #ff7043;
+        }
+
+        .logo {
+            height: 80px;
+            vertical-align: middle;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #453a2f;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .hero-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            margin-bottom: 100px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #5d1d0a, #91361b);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            color: #fff;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 20px;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .adopt-button {
+            background-color: #902f1279;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .adopt-button:hover {
+            background-color: #d8421596;
+            transform: scale(1.05);
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: right;
+            animation: slideInRight 1s ease-out;
+        }
+
+        @keyframes slideInRight {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .hero-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .content-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 100px;
+        }
+
+        .content-item {
+            text-align: center;
+            flex: 1;
+            margin: 0 15px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .content-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .content-item h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .content-item p {
+            font-size: 16px;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        .contact-us {
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
     <header>
         <a href="/"><img src="/images/logo.png" alt="PawsWeb Logo" class="logo"></a>
         <nav class="nav-buttons">
-            <a href="/"><button>HOME</button></a>
-            <a href="aboutus"><button>ABOUT US</button></a>
-            <a href="ourpets"><button>OUR PETS</button></a>
-            <a href="educational"><button>EDUCATIONAL</button></a>
-            <a href="faq"><button>FAQ</button></a>
+            <a href="/"><button class="nav-button">HOME</button></a>
+            <a href="aboutus"><button class="nav-button">ABOUT US</button></a>
+            <a href="ourpets"><button class="nav-button">OUR PETS</button></a>
+            <a href="educational"><button class="nav-button">EDUCATIONAL</button></a>
+            <a href="faq"><button class="nav-button">FAQ</button></a>
         </nav>
         <a href="login"><button class="login-button">LOGIN</button></a>
     </header>
 
-    <hr class="line">
-
     <main>
-        <p>hihi world</p>
+        <section class="hero-section">
+            <div class="hero-text">
+                <h1>Welcome to PawsWeb!</h1>
+                <p>PawWeb aims to raise awareness about the plight of homeless pets and to cultivate a culture of adopting instead of buying.</p>
+                <a href="ourpets"><button class="adopt-button">Adopt now!</button></a>
+            </div>
+            <div class="hero-image">
+                <img src="/images/homepage.jpeg" alt="Pets" id="heroImage">
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="content-item">
+                <h2>Articles</h2>
+                <p>How to Train Your Dog</p>
+                <p>What should your cat eat</p>
+            </div>
+            <div class="content-item">
+                <h2>Animal products</h2>
+                <p>Cat toys</p>
+                <p>Dog toys</p>
+            </div>
+            <div class="content-item">
+                <h2>Forums</h2>
+                <p>My cat is very quiet</p>
+                <p>Dog park near me</p>
+            </div>
+            <div class="content-item contact-us">
+                <h2>Contact us</h2>
+                <p>PawsWeb@gmail.com</p>
+                <p>+65 9123 4567</p>
+                <p>Singapore 123123</p>
+            </div>
+        </section>
     </main>
 
     <footer>
         <p>&copy; 2024 PawsWeb. All rights reserved.</p>
     </footer>
+
+    <script>
+        const images = [
+            "/images/homepage.jpeg",
+            "/images/dog1.jpeg",
+            "/images/cat1.jpeg",
+            "/images/dog2.jpeg",
+            "/images/husky.jpeg"
+
+        ];
+
+        let currentIndex = 0;
+
+        function rotateImage() {
+            const heroImage = document.getElementById("heroImage");
+            currentIndex = (currentIndex + 1) % images.length;
+            heroImage.src = images[currentIndex];
+        }
+
+        setInterval(rotateImage, 3000); // Change image every 3 seconds
+    </script>
 </body>
 </html>

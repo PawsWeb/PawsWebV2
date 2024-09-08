@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | PawsWeb</title>
+    <link rel="icon" href="/images/pawsweb-icon.png">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: Arial, serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #453a2f;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-buttons button {
+            background-color: #ffffff;
+            color: #453a2f;
+            font-size: 18px;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            padding: 10px;
+        }
+
+        .nav-buttons button:hover {
+            font-weight: bold;
+            border-bottom: 2px solid #453a2fc7;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .registration-form {
+            width: 100%;
+            max-width: 400px;
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .register-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #453a2f;
+            color: #fff;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .register-button:hover {
+            background-color: #333;
+        }
+
+        footer {
+            background-color: #453a2f;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="/"><img src="/images/logo.png" alt="PawsWeb Logo" class="logo"></a>
+        <nav class="nav-buttons">
+            <a href="/"><button>HOME</button></a>
+            <a href="aboutus"><button>ABOUT US</button></a>
+            <a href="ourpets"><button>OUR PETS</button></a>
+            <a href="educational"><button>EDUCATIONAL</button></a>
+            <a href="faq"><button>FAQ</button></a>
+        </nav>
+        <a href="login"><button class="login-button">LOGIN</button></a>
+    </header>
+
+    <hr class="line">
+
+    <main>
+        <form action="/users/register" method="POST" class="registration-form">
+            <h1>Create Your Account</h1>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirmPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="shelter">Shelter</option>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="register-button">Register</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 PawsWeb. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

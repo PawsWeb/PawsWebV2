@@ -12,12 +12,21 @@
         <a href="/"><img src="/images/logo.png" alt="PawsWeb Logo" class="logo"></a>
         <nav class="nav-buttons">
             <a href="/"><button>HOME</button></a>
-            <a href="aboutus"><button>ABOUT US</button></a>
-            <a href="ourpets"><button>OUR PETS</button></a>
-            <a href="educational"><button>EDUCATIONAL</button></a>
-            <a href="faq"><button>FAQ</button></a>
+            <a href="/aboutus"><button>ABOUT US</button></a>
+            <a href="/ourpets"><button>OUR PETS</button></a>
+            <a href="/educational"><button>EDUCATIONAL</button></a>
+            <a href="/faq"><button>FAQ</button></a>
         </nav>
-        <a href="login"><button class="login-button">LOGIN</button></a>
+
+        <% if (user) { %>
+            <!-- If user is logged in, show the Logout button -->
+            <form action="/users/logout" method="POST" style="display:inline;">
+                <button type="submit" class="login-button">LOGOUT</button>
+            </form>
+        <% } else { %>
+            <!-- If user is not logged in, show the Login button -->
+            <a href="/login"><button class="login-button">LOGIN</button></a>
+        <% } %>
     </header>
 
     <hr class="line">
@@ -27,10 +36,10 @@
             <h1 class="title">Log In</h1>
             <hr class="line">
             <br>
-            <form action="/login" method="POST">
-                <label for="email">Email</label>
+            <form action="/users/login" method="POST">
+                <label for="username">Username</label> 
                 <br>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
                 <br><br><br>
                 <label for="password">Password</label>
                 <br>
@@ -40,7 +49,7 @@
                 <br><br><br>
             </form>
             <p>Don't have an account yet? Click the button below to register your account.</p>
-            <a href="register"><button class="flip-submit-button">Register</button></a>
+            <a href="/register"><button class="flip-submit-button">Register</button></a>
         </section>
     </main>
     <br><br><br><br><br><br>

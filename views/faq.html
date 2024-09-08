@@ -6,6 +6,31 @@
     <title>FAQ | PawsWeb</title>
     <link rel="icon" type="image/png" href="/images/pawsweb-icon.png">
     <link rel="stylesheet" href="/styles.css">
+    <style>
+        .faq-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-question {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .faq-answer {
+            font-size: 16px;
+            color: #555;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -23,11 +48,40 @@
     <hr class="line">
 
     <main>
-        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleAnswer(this)">What is PawsWeb?</div>
+                <div class="faq-answer">PawsWeb is an online platform designed to raise awareness about the plight of homeless pets and to promote pet adoption. It allows users to browse pet profiles, schedule virtual meet-and-greets, and access educational resources.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleAnswer(this)">How do I adopt a pet?</div>
+                <div class="faq-answer">To adopt a pet, you can browse through the available pet profiles on our website. Once you find a pet you are interested in, you can schedule a virtual meet-and-greet through the website. After the meeting, if you wish to proceed, you can contact the shelter directly to complete the adoption process.</div>
+            </div>
+
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleAnswer(this)">How do I schedule a virtual meet-and-greet with a pet?</div>
+                <div class="faq-answer">To schedule a virtual meet-and-greet, navigate to the pet's profile page and click on the 'Schedule Meet-and-Greet' button. You'll be prompted to fill out a form with your details and preferred meeting time. Once submitted, you will receive a confirmation email with further instructions.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleAnswer(this)">What should I do if I encounter a technical issue on the website?</div>
+                <div class="faq-answer">If you encounter any technical issues while using PawsWeb, please contact our support team at PawsWeb@gmail.com. We'll do our best to resolve the issue as quickly as possible.</div>
+            </div>
+        </div>
     </main>
 
     <footer>
         <p>&copy; 2024 PawsWeb. All rights reserved.</p>
     </footer>
+
+    <script>
+        function toggleAnswer(questionElement) {
+            const answerElement = questionElement.nextElementSibling;
+            const isVisible = answerElement.style.display === "block";
+            answerElement.style.display = isVisible ? "none" : "block";
+        }
+    </script>
 </body>
 </html>
